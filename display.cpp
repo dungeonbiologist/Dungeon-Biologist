@@ -9,7 +9,7 @@ using namespace std;
 /***************************/
 void print()
 {
-	for(int y=-1; y<=Y; y++)//it stops just before the last one, I have to do this to include the corners
+	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
 	{
 		bresenham(cursor.y,y,cursor.x,X);
 		bresenham(cursor.y,y,cursor.x,-1);
@@ -33,14 +33,16 @@ void print()
 	clear();
 	for(int y=0; y<viewY; y++)
 		for(int x=0; x<viewX; x++)
+		{
 			if(visible[y][x])
 			{
 				attrset(COLOR_PAIR(color[y][x]));
 				mvaddch(y, x*2, view[y][x]);
-				color[y][x]=0;
-//				view[y][x]=' ';
-				visible[y][x]=false;
 			}
+			color[y][x]=0;
+			view[y][x]=' ';
+			visible[y][x]=false;
+		}
 	refresh();		// refresh the screen
 }
 /***************************/

@@ -39,7 +39,7 @@ void init()
 	{
 //		monsterlist.push_front(new larva);	//creates some tunnelers
 //		monsterlist.push_front(new crab);	//creates some hammercrabs
-//		monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
+		monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
 		monsterlist.push_front(new cube);	//creates some gelotinous cubes
 	}
 	monsterlist.push_front(&cursor);	//places you into existance on this world
@@ -56,6 +56,11 @@ int main()
 	start_color();
 		init_pair(0, COLOR_WHITE, COLOR_BLACK);
 		init_pair(1, COLOR_RED, COLOR_BLACK);
+		init_pair(2, COLOR_BLUE, COLOR_BLACK);
+		init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(4, COLOR_GREEN, COLOR_BLACK);
+		init_pair(5, COLOR_CYAN, COLOR_BLACK);
+		init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
 	init();
 	while(inchar!='q')	//press q to quit
 	{

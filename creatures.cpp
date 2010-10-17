@@ -193,7 +193,7 @@ using namespace std;
 	{
 		int a=v.y+y;
 		int b=v.x+x;
-		if(legal(a,b)&& wall[a][b])
+		if(legal(a,b)&& !wall[a][b])
 		{
 			if(wall[a-1][b] || wall[a+1][b] ||wall[a][b-1] || wall[a][b+1])
 				return false;
@@ -246,7 +246,10 @@ using namespace std;
 	}
 	void crab::act(){choosemove1(2);avoidobstacles(3);move();wall[y][x]=0;}
 /***************************/
-	mole::mole():creature('m'){}
+	mole::mole():creature('m')
+	{
+		hue=3;//brown
+	}
 	int mole::directionblocked() //it eats cubes
 	{
 		int a=v.y+y;
