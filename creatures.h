@@ -105,5 +105,11 @@ struct slime: creature
 	virtual void act();
 	virtual bool reproduce();
 };
+struct dwarf: creature
+{
+	int diglength;
+	dwarf();
+	virtual void act();
+};
 /***************************/
 #endif

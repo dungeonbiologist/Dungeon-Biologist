@@ -2,6 +2,7 @@
 #include <curses.h>
 #include <iostream>
 #include <list>
+#include <math.h>
 #include "creatures.h"
 #include "globals.h"
 using namespace std;
@@ -42,9 +43,10 @@ using namespace std;
 		x=b;
 		appearance=c;
 		hue=1;
+		
 	}
 /***************************/
-	creature::creature(char c):item(Y/2,rand()%X,c)
+	creature::creature(char c):item(rand()%Y/2,rand()%X,c)
 	{
 		hp=5;
 		speed=100;
@@ -53,6 +55,11 @@ using namespace std;
 		small=true;
 		solid=true;
 		translucent=false;
+		for(int i=0;i<10 && wall[y][x];++i)
+		{
+			y=rand()%Y;
+			x=rand()%X;
+		}
 	}
 	/***********************/
 	void creature::move()
@@ -213,6 +220,8 @@ using namespace std;
 					monsterlist.push_front(new crab);	//create some space
 				else if(inchar=='L')
 					monsterlist.push_front(new larva);	//create some tunnels
+				else if(inchar=='D')
+					monsterlist.push_front(new dwarf);	//create some tunnels
 //				avoidobstacles(1);
 				move();
 		}
@@ -263,13 +272,13 @@ using namespace std;
 	}
 	bool cube::reproduce()
 	{
-		if(energy>200)
+		if(energy>300)
 		{
 			monsterlist.push_front(new cube);
 			list<creature*>::const_iterator i=monsterlist.begin();
 			(*i)->y=y;
 			(*i)->x=x;
-			energy-=100;
+			energy-=200;
 		}
 	}
 /***************************/
@@ -393,8 +402,13 @@ using namespace std;
 	{
 		Cname="Wall slime";
 		hue=4;
-		small=true;
-		y=rand()%Y;
+		small=true;           
+		while(wall[y][x]==0)
+		{
+			y=rand()%Y;
+			x=rand()%X;
+		}
+		
 	}
 	void slime::act()
 	{
@@ -424,5 +438,34 @@ using namespace std;
 				return true;
 			}
 		}
+	}
+/***************************/
+	dwarf::dwarf():creature('d')
+	{
+		Cname="Dwarf";
+		hue=3;
+		diglength=0;
+		v.y=rand()%2*2-1;
+		v.x=0;
+		solid=false;
+	}
+	void dwarf::act()
+	{
+		if(diglength==0)
+			diglength=pow(2,rand()%6);
+		if(diglength==1 || directionblocked())
+		{
+			int a;
+			do{
+				a=rand()%2*2-1;
+				v.turn(a);
+				v.turn(a);
+			}while(directionblocked());
+		}
+
+		wall[y][x]=0;
+		move();
+		--diglength;
+//		energy++;
 	}
 /***************************/

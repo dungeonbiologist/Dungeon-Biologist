@@ -9,16 +9,6 @@ using namespace std;
 /***************************/
 void print()
 {
-	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
-	{
-		bresenham(cursor.y,y,cursor.x,X);
-		bresenham(cursor.y,y,cursor.x,-1);
-	}
-	for(int x=-1; x<=X; x++)
-	{
-		bresenham(cursor.y,Y,cursor.x,x);
-		bresenham(cursor.y,-1,cursor.x,x);
-	}
 	for(int y=0; y<Y; y++)
 		for(int x=0; x<X; x++)
 		{
@@ -30,6 +20,16 @@ void print()
 	for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 		(*i)->appear();
 	view[cursor.y][cursor.x]=cursor.appearance;
+	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
+	{
+		bresenham(cursor.y,y,cursor.x,X);
+		bresenham(cursor.y,y,cursor.x,-1);
+	}
+	for(int x=-1; x<=X; x++)
+	{
+		bresenham(cursor.y,Y,cursor.x,x);
+		bresenham(cursor.y,-1,cursor.x,x);
+	}
 	clear();
 	for(int y=0; y<viewY; y++)
 		for(int x=0; x<viewX; x++)

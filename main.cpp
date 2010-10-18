@@ -41,7 +41,7 @@ void init()
 		for(int x=0; x<X; x++)
 		{
 			view[y][x]=' ';
-			wall[y][x]=(rand()%5)/4;
+			wall[y][x]=1;//(rand()%5)/4;
 			visible[y][x]=false;
 			color[y][x]=0;
 		}
@@ -53,11 +53,12 @@ void init()
 	{
 //		monsterlist.push_front(new larva);	//creates some tunnelers
 //		monsterlist.push_front(new crab);	//creates some hammercrabs
-		monsterlist.push_front(new slime);	//food
-		monsterlist.push_front(new slime);
-		monsterlist.push_front(new cube);	//creates some gelatinous cubes
+//		monsterlist.push_front(new slime);	//food
+//		monsterlist.push_front(new slime);
+//		monsterlist.push_front(new cube);	//creates some gelatinous cubes
 	}
-	monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
+//	monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
+	monsterlist.push_front(new dwarf);
 	monsterlist.push_front(&cursor);	//places you into existance on this world
 }
 /***************************/
