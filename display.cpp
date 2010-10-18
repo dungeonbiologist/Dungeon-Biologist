@@ -34,7 +34,7 @@ void print()
 	for(int y=0; y<viewY; y++)
 		for(int x=0; x<viewX; x++)
 		{
-			if(visible[y][x])
+//			if(visible[y][x])
 			{
 				attrset(COLOR_PAIR(color[y][x]));
 				mvaddch(y, x*2, view[y][x]);

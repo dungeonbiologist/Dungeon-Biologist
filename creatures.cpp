@@ -48,8 +48,9 @@ using namespace std;
 	{
 		hp=5;
 		speed=100;
-		energy=0;
-		small=false;
+		time=0;
+		energy=100;
+		small=true;
 		solid=true;
 		translucent=false;
 	}
@@ -58,6 +59,9 @@ using namespace std;
 	{
 		int a=v.y+y;
 		int b=v.x+x;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && (*i)->small!=true)
+				return;
 		if(legal(a,b) && !directionblocked())
 		{
 			y=a;
@@ -121,7 +125,7 @@ using namespace std;
 			vect left,right,old;
 			old=v;
 			left=v;	//abstractly left, it could actually be either direction
-			right=v;
+			right=v;	//opposite of 'left'
 			for(int i=0;i<b;++i)
 			{
 				right.turn(a);
@@ -141,6 +145,30 @@ using namespace std;
 	void creature::seek(int a, int b, int c){v.y=(a-y)*c;v.x=(b-x)*c;}//c is  -1 to 1
 	void creature::attacked (creature* attacker) {}
 	void creature::attack(creature* victim) {victim->attacked(this);}
+	bool creature::eat()
+	{
+		int a,b;
+		for(int i=-1;i<2;++i)
+			for(int j=-1;j<2;++j)
+			{
+				a=y+i;
+				b=x+j;
+				for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+				{
+					if((*i)->sameplace(a,b) && (*i)!=this)
+					{
+						for(list<string>::const_iterator j=edible.begin();j !=edible.end();j++)
+							if((*i)->Cname==(*j))
+							{
+								(*i)->energy-=5;
+								energy+=5;
+								(*i)->attacked(this);
+								return true;
+							}
+					}
+				}
+			}
+	}
 	/***********************/
 	void creature::run(int distance)
 	{
@@ -150,9 +178,16 @@ using namespace std;
 			move();
 		}
 	}
+	bool creature::reproduce(){}
 /***************************/
+	me::me(): creature('@')
+	{
+		Cname="you";
+		solid=false;
+	}
 	void me::act()
 	{
+		energy++;
 		inchar = char(getch());
 		if(inchar != ERR)
 		{
@@ -168,31 +203,49 @@ using namespace std;
 					v.x=1;
 				else if(inchar==' ')
 					wall[y][x]^=1;
+				else if(inchar=='S')
+					monsterlist.push_front(new slime);	//create some food
+				else if(inchar=='C')
+					monsterlist.push_front(new cube);	//creates some gelatinous cubes
+				else if(inchar=='M')
+					monsterlist.push_front(new mole);	//create some apex predators
+				else if(inchar=='H')
+					monsterlist.push_front(new crab);	//create some space
+				else if(inchar=='L')
+					monsterlist.push_front(new larva);	//create some tunnels
 //				avoidobstacles(1);
 				move();
 		}
 	}
-	me::me(): creature('@'){solid=false;}
 	void me::attacked(creature* attacker){}
 /***************************/	
 	cube::cube():creature('C')
 	{
+		Cname="Gelatinous Cube";
 		v.y=rand()%2*2-1;
 		v.x=rand()%2*2-1;
 		speed=50;
 		translucent=true;
+		edible.push_front("Wall slime");
+		edible.push_front("Hammer Crab");
 	}
 	void cube::attacked (creature* attacker)
 	{
 		v.y=y-attacker->y;//face away from the attacker
 		v.x=x-attacker->x;
-		wall[y][x]=1;	//place a wall
-		run(1);			//and run
+		avoidobstacles(2);	//only turn a little so that you don't approch the preditor
+		if(!directionblocked())
+			wall[y][x]=1;	//place a wall
+		avoidobstacles(2);
+		move();			//and run
 	}
 	int cube::directionblocked()
 	{
 		int a=v.y+y;
 		int b=v.x+x;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
+				return true;
 		if(legal(a,b)&& !wall[a][b])
 		{
 			if(wall[a-1][b] || wall[a+1][b] ||wall[a][b-1] || wall[a][b+1])
@@ -200,17 +253,43 @@ using namespace std;
 		}
 		return true;
 	}
-	void cube::act(){move2(3);avoidobstacles(3);move();}
+	void cube::act()
+	{
+		eat();
+		reproduce();
+		move2(3);
+		avoidobstacles(3);
+		move();
+	}
+	bool cube::reproduce()
+	{
+		if(energy>200)
+		{
+			monsterlist.push_front(new cube);
+			list<creature*>::const_iterator i=monsterlist.begin();
+			(*i)->y=y;
+			(*i)->x=x;
+			energy-=100;
+		}
+	}
 /***************************/
-	larva::larva():creature('~'){hp=20;}
+	larva::larva():creature('~')
+	{
+		Cname="Larva";
+		hp=20;
+		hue=5;
+	}
 	void larva::attacked (creature* attacker) {}
 	int larva::directionblocked()
 	{
 		int a=v.y+y;
 		int b=v.x+x;
-		if(v.y*v.x!=0 || !legal(a,a))
+		if(!legal(a,a))
 			return true;
-		if(wall[a][b]==1)
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
+				return 1;
+		if(wall[a][b]==1 && v.y*v.x!=0) //you can only remove walls when you are moveing orthagonally
 		{
 			for(int i=-1;i<2;++i)
 			{
@@ -226,17 +305,34 @@ using namespace std;
 	void larva::act()
 	{
 		choosemove1(1);
+		eat();
 		move();
-		wall[y][x]=0;
+	}
+	bool larva::eat()
+	{
+		if(wall[y+v.y][x+v.x]&&!directionblocked())
+		{
+			wall[y+v.y][x+v.x]=0;
+			energy+=100;
+			return true;
+		}
+		return false;
 	}
 /***************************/
-	crab::crab():creature('c'){}
+	crab::crab():creature('c')
+	{
+		Cname="Hammer Crab";
+		hue=6;
+	}
 	int crab::directionblocked()
 	{
 		int a=v.y+y;
 		int b=v.x+x;
 		if(v.y*v.x!=0 || !legal(a,a))
 			return true;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
+				return 1;
 		if(wall[a][b]==1)
 		{
 			if((wall[a][b+1]+wall[a][b-1]+wall[a+1][b]+wall[a-1][b])>1)//make them remove blocks that stick out
@@ -248,7 +344,10 @@ using namespace std;
 /***************************/
 	mole::mole():creature('m')
 	{
+		Cname="Mole";
 		hue=3;//brown
+		edible.push_front("Gelatinous Cube");
+		edible.push_front("Mole");
 	}
 	int mole::directionblocked() //it eats cubes
 	{
@@ -256,6 +355,9 @@ using namespace std;
 		int b=v.x+x;
 		if(!legal(a,b))
 			return true;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && (*i)->small!=true)
+				return 1;
 		if(wall[a][b]==1)
 		{
 			if(wall[a+v.y][b]==0 && wall[a][b+1]==1 && wall[a][b-1]==1)//make them burst through thin walls
@@ -268,9 +370,59 @@ using namespace std;
 	}
 	void mole::act()
 	{
+		eat();
+		reproduce();
 		choosemove1(3);
 		avoidobstacles(3);
 		move();
 		wall[y][x]=0;
+	}
+	bool mole::reproduce()
+	{
+		if(energy>200)
+		{
+			monsterlist.push_front(new mole);
+			list<creature*>::const_iterator i=monsterlist.begin();
+			(*i)->y=y;
+			(*i)->x=x;
+			energy-=100;
+		}
+	}
+/***************************/
+	slime::slime():creature('#')
+	{
+		Cname="Wall slime";
+		hue=4;
+		small=true;
+		y=rand()%Y;
+	}
+	void slime::act()
+	{
+		energy+=2;
+		reproduce();
+	}
+	bool slime::reproduce()
+	{
+		if(energy>200)
+		{
+			int a=rand()%Y;
+			int b=rand()%X;
+			for(int i=0;i<10 && wall[a][b]==0;++i)
+			{
+				a=rand()%Y;
+				b=rand()%X;
+			}
+			if(wall[y][x]==0)
+				return false;
+			else
+			{
+				monsterlist.push_front(new slime);
+				energy-=100;
+				list<creature*>::const_iterator i=monsterlist.begin();
+				(*i)->y=a;
+				(*i)->x=b;
+				return true;
+			}
+		}
 	}
 /***************************/

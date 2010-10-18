@@ -1,4 +1,5 @@
 #include <list>
+using namespace std;
 #ifndef CREATURES
 #define CREATURES
 /***************************/
@@ -41,7 +42,10 @@ struct item:tile
 struct creature:item
 {
 	creature(char c);
-	int hp,energy,speed;
+	int hp,time,speed;
+	string Cname;
+	list <string> edible;
+	int energy;	//uses for special abilities and reproduceing
 	bool small; //doesn't block other creatures
 	bool solid;	//can't walk through walls
 	bool translucent;//looking
@@ -55,7 +59,9 @@ struct creature:item
 	virtual void seek(int a, int b, int c);
 	virtual void attacked (creature* attacker);
 	virtual void attack(creature* victim);
+	virtual bool eat();
 	virtual void run(int distance);
+	virtual bool reproduce();
 };
 /***************************/
 struct me: creature
@@ -70,6 +76,7 @@ struct cube: creature
 	virtual void attacked (creature* attacker);
 	virtual int directionblocked();
 	virtual void act();
+	virtual bool reproduce();
 };
 struct larva: creature
 {
@@ -77,6 +84,7 @@ struct larva: creature
 	virtual void attacked (creature* attacker);
 	virtual int directionblocked();
 	virtual void act();
+	virtual bool eat();
 };
 struct crab: creature
 {
@@ -89,6 +97,13 @@ struct mole: creature
 	mole();
 	virtual int directionblocked();
 	virtual void act();
+	virtual bool reproduce();
+};
+struct slime: creature
+{
+	slime();
+	virtual void act();
+	virtual bool reproduce();
 };
 /***************************/
 #endif

@@ -1,0 +1,25 @@
+Dungeon biologist is a work in progress which intends to become a dungeon ecology simulation
+
+current planned creatures
+
+Larva: eats walls that have only one side exposed can only move orthogonally
+gelatinous cubes: must stay in contact with a wall at all times. if attacked they excrete a wall, they eat wall slime and hammer-crabs if they find them
+moles: eat cubes,  can only destroy walls that are unsupported on the opposite side and flanked by two solid walls
+hammercrab: destroys any walls that are exposed on three or more faces,can move slowly on the y axis, eats trantoros 
+
+Giant Worm:	eats larva, if it gets stuck it turns and knocks out a wall
+Trantoro: turns to stone when scared, eats moss
+slug:	leaves a slime trail when frightened that slows other creatures down
+vampire bush:	spreads when it kills a creature
+glow flower:	anything that eats it starts glowing
+choke vine:
+rock coral: slowly turns into a wall
+moths: seeks lit squares, it's eggs only hatch every 500 turns
+liveing portal: they come in pairs looks like a p from three sides, like a doorway from one side
+Shield bug:	immune to attacks from the front
+Grow Troll: enlarges and can knock out walls when angry
+thower:	throws items or monsters for defense
+floating eye:	raises alarm when scared
+trapper:	lays down traps to catch prey
+Ballistomycete: when it explodes it produces a few giant spores.
+giant spore: once about every 40 turns it produces a Ballistomycete. it leaves a trail of mold covered tiles. when it dies it explodes into several Ballistomycetes
