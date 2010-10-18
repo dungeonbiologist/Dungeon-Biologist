@@ -36,7 +36,6 @@ using namespace std;
 		view[y][x]=appearance;
 		color[y][x]=hue;
 	}
-	void item::die(){}
 	item::item(int a, int b,char c):tile()
 	{
 		y=a;
@@ -46,15 +45,21 @@ using namespace std;
 		
 	}
 /***************************/
+	void creature::die()
+	{
+		dead=true;
+		hue=7;
+	}
 	creature::creature(char c):item(rand()%Y/2,rand()%X,c)
 	{
 		hp=5;
 		speed=100;
-		time=0;
+		ap=0;
 		energy=100;
 		small=true;
 		solid=true;
 		translucent=false;
+		dead=false;
 		for(int i=0;i<10 && wall[y][x];++i)
 		{
 			y=rand()%Y;
@@ -242,10 +247,9 @@ using namespace std;
 	{
 		v.y=y-attacker->y;//face away from the attacker
 		v.x=x-attacker->x;
-		avoidobstacles(2);	//only turn a little so that you don't approch the preditor
-		if(!directionblocked())
+		avoidobstacles(3);	//only turn a little so that you don't approch the preditor
+		if((wall[y][x-1]==0 && wall[y][x+1]==0) || (wall[y-1][x]==0 && wall[y+1][x]==0))
 			wall[y][x]=1;	//place a wall
-		avoidobstacles(2);
 		move();			//and run
 	}
 	int cube::directionblocked()
@@ -298,7 +302,9 @@ using namespace std;
 		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
 				return 1;
-		if(wall[a][b]==1 && v.y*v.x!=0) //you can only remove walls when you are moveing orthagonally
+		if(wall[a][b] && v.y*v.x!=0)
+			return true;
+		if(wall[a][b]) //you can only remove walls when you are moveing orthagonally
 		{
 			for(int i=-1;i<2;++i)
 			{
@@ -388,13 +394,14 @@ using namespace std;
 	}
 	bool mole::reproduce()
 	{
-		if(energy>200)
+		if(energy>800)
 		{
 			monsterlist.push_front(new mole);
 			list<creature*>::const_iterator i=monsterlist.begin();
 			(*i)->y=y;
 			(*i)->x=x;
-			energy-=100;
+			(*i)->energy=200;
+			energy-=500;
 		}
 	}
 /***************************/
@@ -412,8 +419,11 @@ using namespace std;
 	}
 	void slime::act()
 	{
-		energy+=2;
+		energy++;
+		energy+=rand()%3/2;
 		reproduce();
+		if(wall[y][x]==0)
+			hp=0;
 	}
 	bool slime::reproduce()
 	{

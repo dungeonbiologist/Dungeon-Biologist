@@ -35,6 +35,7 @@ void init()
 		init_pair(4, COLOR_GREEN, COLOR_BLACK);
 		init_pair(5, COLOR_CYAN, COLOR_BLACK);
 		init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+		init_pair(7, COLOR_WHITE, COLOR_RED);
 	turncount=0;
 	for(int y=0; y<Y; y++)
 	{
@@ -70,20 +71,19 @@ int main()
 		print();
 		for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 		{
-			if(((*i)->energy)<=0)
-				(*i)->hp=0;
 			if(((*i)->hp)<=0)
 			{
 				(*i)->die();
-				monsterlist.erase(i);
-			}			
-			(*i)->time+=(*i)->speed;
-			if((*i)->time>=100)
-			{
-				(*i)->time-=100;
-				(*i)->act();
-				(*i)->energy--;
 			}
+			(*i)->ap+=(*i)->speed;
+			(*i)->energy--;
+			if((*i)->ap>=100 && !(*i)->dead)
+			{
+				(*i)->ap-=100;
+				(*i)->act();
+			}
+			if(((*i)->energy)<=0)
+				monsterlist.erase(i);
 		}
 		++turncount;
 	}

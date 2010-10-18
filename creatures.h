@@ -36,19 +36,22 @@ struct item:tile
 	char appearance;
 	int hue;
 	virtual void appear();
-	virtual void die();
 	item(int a, int b,char c);
 };
 struct creature:item
 {
 	creature(char c);
-	int hp,time,speed;
+	int hp,ap; //action points
+	int speed;
 	string Cname;
 	list <string> edible;
+	list <item*> held;
 	int energy;	//uses for special abilities and reproduceing
 	bool small; //doesn't block other creatures
 	bool solid;	//can't walk through walls
-	bool translucent;//looking
+	bool translucent;	//tints any tiles that you see past it
+	bool dead;
+	virtual void die();
 	virtual void move();
 	virtual int directionblocked();
 	virtual void act();
