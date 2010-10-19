@@ -38,6 +38,7 @@ struct item:tile
 	virtual void update();
 	virtual void appear();
 	item(int a, int b,char c);
+	virtual bool set(int a,int b);
 };
 struct creature:item
 {
@@ -47,6 +48,7 @@ struct creature:item
 	string Cname;
 	list <string> edible;
 	list <item*> held;
+	list <tile> memory;
 	int energy;	//uses for special abilities and reproduceing
 	bool small; //doesn't block other creatures
 	bool solid;	//can't walk through walls
@@ -101,13 +103,6 @@ struct mole: creature
 	mole();
 	virtual int directionblocked();
 	virtual void update();
-	virtual bool reproduce();
-};
-struct slime: creature
-{
-	slime();
-	virtual void update();
-	virtual int directionblocked();
 	virtual bool reproduce();
 };
 struct dwarf: creature

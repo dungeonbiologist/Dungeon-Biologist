@@ -4,6 +4,7 @@
 #include <list>
 #include <math.h>
 #include "creatures.h"
+#include "plants.h"
 #include "globals.h"
 using namespace std;
 
@@ -41,13 +42,23 @@ using namespace std;
 	}
 	item::item(int a, int b,char c):tile()
 	{
-		y=a;
-		x=b;
+		set(a,b);
 		appearance=c;
 		hue=1;
-		map[y][x].push_front(this);
 	}
 	void item::update(){}
+	bool item::set(int a,int b)
+	{
+		if(legal(a,b))
+		{
+			for(list<item*>::iterator i=map[y][x].begin(); i != map[y][x].end(); i++)
+				if((*i)==this)
+					map[y][x].erase(i);
+			map[a][b].push_front(this);
+			y=a;
+			x=b;
+		}
+	}
 /***************************/
 	void creature::die()
 	{
@@ -64,13 +75,10 @@ using namespace std;
 		solid=true;
 		translucent=false;
 		dead=false;
-			map[y][x].pop_front();
 		for(int i=0;i<10 && directionblocked();++i)
 		{
-			y=rand()%Y;
-			x=rand()%X;
+			set(rand()%Y,rand()%X);
 		}
-			map[y][x].push_front(this);
 	}
 	/***********************/
 	void creature::move()
@@ -82,12 +90,7 @@ using namespace std;
 				return;
 		if(legal(a,b) && !directionblocked())
 		{
-			for(list<item*>::iterator i=map[y][x].begin(); i != map[y][x].end(); i++)
-				if((*i)==this)
-					map[y][x].erase(i);
-			y=a;
-			x=b;
-			map[a][b].push_front(this);
+			set(a,b);
 		}
 	}
 	/***********************/
@@ -290,8 +293,7 @@ using namespace std;
 		{
 			monsterlist.push_front(new cube);
 			list<creature*>::const_iterator i=monsterlist.begin();
-			(*i)->y=y;
-			(*i)->x=x;
+			(*i)->set(y,x);
 			energy-=200;
 		}
 	}
@@ -404,74 +406,15 @@ using namespace std;
 	}
 	bool mole::reproduce()
 	{
-		if(energy>800)
+/*		if(energy>800)
 		{
 			monsterlist.push_front(new mole);
 			list<creature*>::const_iterator i=monsterlist.begin();
-			(*i)->y=y;
-			(*i)->x=x;
+			set(y,x);
 			(*i)->energy=200;
 			energy-=500;
 		}
-	}
-/***************************/
-	slime::slime():creature('#')
-	{
-		Cname="Wall slime";
-		hue=4;
-		small=true;
-			map[y][x].pop_front();
-		while(wall[y][x]==0)
-		{
-			y=rand()%Y;
-			x=rand()%X;
-		}
-			map[y][x].push_front(this);
-	}
-	void slime::update()
-	{
-		energy++;
-		energy+=rand()%3/2;
-		reproduce();
-		if(wall[y][x]==0)
-			hp=0;
-		v.y=0;
-		v.x=0;
-		move();
-	}
-	int slime::directionblocked()
-	{
-		int a=v.y+y;
-		int b=v.x+x;
-		if(!legal(a,b) || wall[a][b]==0)
-			return true;
-		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-			if((*i)->sameplace(a,b) && (*i)!=this && (*i)->small!=true)
-				return 1;
-		return false;
-	}
-	bool slime::reproduce()
-	{
-		if(energy>200)
-		{
-			int a=rand()%Y;
-			int b=rand()%X;
-			for(int i=0;i<10 && wall[a][b]==0;++i)
-			{
-				a=rand()%Y;
-				b=rand()%X;
-			}
-			if(wall[y][x]==0)
-				return false;
-			else
-			{
-				monsterlist.push_front(new slime);
-				energy-=100;
-				list<creature*>::const_iterator i=monsterlist.begin();
-				return true;
-			}
-		}
-	}
+*/	}
 /***************************/
 	dwarf::dwarf():creature('d')
 	{
@@ -499,6 +442,5 @@ using namespace std;
 		wall[y][x]=0;
 		move();
 		--diglength;
-//		energy++;
 	}
 /***************************/

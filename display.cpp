@@ -20,8 +20,8 @@ void print()
 			for(i=map[y][x].begin();i != map[y][x].end();i++)
 			{
 				(*i)->appear();
-				if((*i)->x !=x ||(*i)->y !=y)		//DANGER! this could conceal a bug, fix what causes the disreprency first
-					map[y][x].erase(i);
+//				if((*i)->x !=x ||(*i)->y !=y)		//DANGER! this could conceal a bug, fix what causes the disreprency first
+//					map[y][x].erase(i);
 			}
 		}
 //	for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
