@@ -35,6 +35,7 @@ struct item:tile
 	vect v;
 	char appearance;
 	int hue;
+	virtual void update();
 	virtual void appear();
 	item(int a, int b,char c);
 };
@@ -51,10 +52,10 @@ struct creature:item
 	bool solid;	//can't walk through walls
 	bool translucent;	//tints any tiles that you see past it
 	bool dead;
+	virtual void update();
 	virtual void die();
 	virtual void move();
 	virtual int directionblocked();
-	virtual void act();
 	virtual void choosemove1(int a);
 	virtual bool dig();
 	virtual void move2(int a);
@@ -69,7 +70,7 @@ struct creature:item
 /***************************/
 struct me: creature
 {
-	virtual void act();
+	virtual void update();
 	me();
 	virtual void attacked(creature* attacker);
 };
@@ -78,7 +79,7 @@ struct cube: creature
 	cube();
 	virtual void attacked (creature* attacker);
 	virtual int directionblocked();
-	virtual void act();
+	virtual void update();
 	virtual bool reproduce();
 };
 struct larva: creature
@@ -86,33 +87,34 @@ struct larva: creature
 	larva();
 	virtual void attacked (creature* attacker);
 	virtual int directionblocked();
-	virtual void act();
+	virtual void update();
 	virtual bool eat();
 };
 struct crab: creature
 {
 	crab();
 	virtual int directionblocked();
-	virtual void act();
+	virtual void update();
 };
 struct mole: creature
 {
 	mole();
 	virtual int directionblocked();
-	virtual void act();
+	virtual void update();
 	virtual bool reproduce();
 };
 struct slime: creature
 {
 	slime();
-	virtual void act();
+	virtual void update();
+	virtual int directionblocked();
 	virtual bool reproduce();
 };
 struct dwarf: creature
 {
 	int diglength;
 	dwarf();
-	virtual void act();
+	virtual void update();
 };
 /***************************/
 #endif

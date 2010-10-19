@@ -1,6 +1,5 @@
 Dungeon biologist is a work in progress which intends to become a dungeon ecology simulation
 
-current planned creatures
 'L' adds a larva
 'H' adds a hammercrab
 'M' adds a mole
@@ -12,6 +11,7 @@ gelatinous cubes: must stay in contact with a wall at all times. if attacked the
 moles: eat cubes,  can only destroy walls that are unsupported on the opposite side and flanked by two solid walls
 hammercrab: destroys any walls that are exposed on three or more faces,can move slowly on the y axis, eats trantoros 
 
+current planned creatures
 Giant Worm:	eats larva, if it gets stuck it turns and knocks out a wall
 Trantoro: turns to stone when scared, eats moss
 slug:	leaves a slime trail when frightened that slows other creatures down

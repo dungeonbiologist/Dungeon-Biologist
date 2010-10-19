@@ -9,6 +9,7 @@
 using namespace std;
 /***************************/
 	int wall[Y][X];
+	list <item*> map[Y][X];
 	char inchar;
 	int turncount;
 	char view[viewY][viewX];
@@ -41,10 +42,16 @@ void init()
 	{
 		for(int x=0; x<X; x++)
 		{
-			view[y][x]=' ';
 			wall[y][x]=1;//(rand()%5)/4;
-			visible[y][x]=false;
-			color[y][x]=0;
+		}
+	}
+	for(int a=0; a<viewY; a++)
+	{
+		for(int b=0; b<viewX; b++)
+		{
+			view[a][b]=' ';
+			visible[a][b]=false;
+			color[a][b]=0;
 		}
 	}
 	/************************************************************/
@@ -72,18 +79,23 @@ int main()
 		for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 		{
 			if(((*i)->hp)<=0)
-			{
 				(*i)->die();
-			}
 			(*i)->ap+=(*i)->speed;
 			(*i)->energy--;
 			if((*i)->ap>=100 && !(*i)->dead)
 			{
 				(*i)->ap-=100;
-				(*i)->act();
+				(*i)->update();
 			}
-			if(((*i)->energy)<=0)
+			if(((*i)->energy)<=0)//HACK!! this is a memory leak, this creature hasn't actually been deleted
+			{
+				int a=(*i)->y;
+				int b=(*i)->x;
+				for(list<item*>::iterator j=map[a][b].begin(); j != map[a][b].end(); j++)
+					if((*j)==(*i))
+						map[a][b].erase(j);
 				monsterlist.erase(i);
+			}
 		}
 		++turncount;
 	}

@@ -12,6 +12,7 @@ using namespace std;
 	#define Y 20		//height of world
 	#define X 40		//width of world
 	extern int wall[Y][X];
+	extern list <item*> map[Y][X];
 	extern char inchar;
 	extern int turncount;
 	extern char view[viewY][viewX];

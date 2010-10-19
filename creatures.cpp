@@ -29,7 +29,10 @@ using namespace std;
 	}
 /***************************/
 	tile::tile(){}
-	bool tile::sameplace(int a,int b) {return (a==y && b==x);}
+	bool tile::sameplace(int a,int b)
+	{
+		return (a==y && b==x);
+	}
 /***************************/
 	void item::appear()
 	{
@@ -42,8 +45,9 @@ using namespace std;
 		x=b;
 		appearance=c;
 		hue=1;
-		
+		map[y][x].push_front(this);
 	}
+	void item::update(){}
 /***************************/
 	void creature::die()
 	{
@@ -60,11 +64,13 @@ using namespace std;
 		solid=true;
 		translucent=false;
 		dead=false;
-		for(int i=0;i<10 && wall[y][x];++i)
+			map[y][x].pop_front();
+		for(int i=0;i<10 && directionblocked();++i)
 		{
 			y=rand()%Y;
 			x=rand()%X;
 		}
+			map[y][x].push_front(this);
 	}
 	/***********************/
 	void creature::move()
@@ -76,8 +82,12 @@ using namespace std;
 				return;
 		if(legal(a,b) && !directionblocked())
 		{
+			for(list<item*>::iterator i=map[y][x].begin(); i != map[y][x].end(); i++)
+				if((*i)==this)
+					map[y][x].erase(i);
 			y=a;
 			x=b;
+			map[a][b].push_front(this);
 		}
 	}
 	/***********************/
@@ -93,7 +103,7 @@ using namespace std;
 		return 0;
 	}
 	/***********************/
-	void creature::act()
+	void creature::update()
 	{
 		choosemove1(1);
 		avoidobstacles(4);
@@ -197,7 +207,7 @@ using namespace std;
 		Cname="you";
 		solid=false;
 	}
-	void me::act()
+	void me::update()
 	{
 		energy++;
 		inchar = char(getch());
@@ -266,7 +276,7 @@ using namespace std;
 		}
 		return true;
 	}
-	void cube::act()
+	void cube::update()
 	{
 		eat();
 		reproduce();
@@ -302,7 +312,7 @@ using namespace std;
 		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
 				return 1;
-		if(wall[a][b] && v.y*v.x!=0)
+		if(wall[a][b] && v.y*v.x != 0)
 			return true;
 		if(wall[a][b]) //you can only remove walls when you are moveing orthagonally
 		{
@@ -317,7 +327,7 @@ using namespace std;
 		}
 		return false;
 	}
-	void larva::act()
+	void larva::update()
 	{
 		choosemove1(1);
 		eat();
@@ -355,7 +365,7 @@ using namespace std;
 		}
 		return false;
 	}
-	void crab::act(){choosemove1(2);avoidobstacles(3);move();wall[y][x]=0;}
+	void crab::update(){choosemove1(2);avoidobstacles(3);move();wall[y][x]=0;}
 /***************************/
 	mole::mole():creature('m')
 	{
@@ -383,7 +393,7 @@ using namespace std;
 		}
 		return false;
 	}
-	void mole::act()
+	void mole::update()
 	{
 		eat();
 		reproduce();
@@ -409,21 +419,36 @@ using namespace std;
 	{
 		Cname="Wall slime";
 		hue=4;
-		small=true;           
+		small=true;
+			map[y][x].pop_front();
 		while(wall[y][x]==0)
 		{
 			y=rand()%Y;
 			x=rand()%X;
 		}
-		
+			map[y][x].push_front(this);
 	}
-	void slime::act()
+	void slime::update()
 	{
 		energy++;
 		energy+=rand()%3/2;
 		reproduce();
 		if(wall[y][x]==0)
 			hp=0;
+		v.y=0;
+		v.x=0;
+		move();
+	}
+	int slime::directionblocked()
+	{
+		int a=v.y+y;
+		int b=v.x+x;
+		if(!legal(a,b) || wall[a][b]==0)
+			return true;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this && (*i)->small!=true)
+				return 1;
+		return false;
 	}
 	bool slime::reproduce()
 	{
@@ -443,8 +468,6 @@ using namespace std;
 				monsterlist.push_front(new slime);
 				energy-=100;
 				list<creature*>::const_iterator i=monsterlist.begin();
-				(*i)->y=a;
-				(*i)->x=b;
 				return true;
 			}
 		}
@@ -459,7 +482,7 @@ using namespace std;
 		v.x=0;
 		solid=false;
 	}
-	void dwarf::act()
+	void dwarf::update()
 	{
 		if(diglength==0)
 			diglength=pow(2,rand()%6);
