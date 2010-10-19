@@ -54,6 +54,8 @@ struct creature:item
 	bool solid;	//can't walk through walls
 	bool translucent;	//tints any tiles that you see past it
 	bool dead;
+	bool egg; //if this is an egg
+	bool eggeater; //it can eat any type of eggs
 	virtual void update();
 	virtual void die();
 	virtual void move();

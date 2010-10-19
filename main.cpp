@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include "creatures.h"
+#include "plants.h"
 #include "globals.h"
 #include "display.h"
 using namespace std;
@@ -59,10 +60,11 @@ void init()
 	/************************************************************/
 	for(int i=0;i<5;++i)
 	{
-//		monsterlist.push_front(new larva);	//creates some tunnelers
+		for(int j=0;j<15;++j)
+			monsterlist.push_front(new larva);	//creates some tunnelers
 //		monsterlist.push_front(new crab);	//creates some hammercrabs
 //		monsterlist.push_front(new slime);	//food
-//		monsterlist.push_front(new slime);
+		monsterlist.push_front(new slime);
 //		monsterlist.push_front(new cube);	//creates some gelatinous cubes
 	}
 //	monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)

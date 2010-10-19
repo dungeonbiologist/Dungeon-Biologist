@@ -4,7 +4,6 @@ using namespace std;
 struct plant: creature
 {
 	plant(char c);
-	bool seed;
 	virtual bool sprout();
 	virtual void appear();
 };

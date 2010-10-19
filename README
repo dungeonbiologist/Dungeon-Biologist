@@ -5,11 +5,12 @@ Dungeon biologist is a work in progress which intends to become a dungeon ecolog
 'M' adds a mole
 'C' add a gelatinous cube
 'D' adds a dwarf
+'S'	adds a wallslime 
 
 Larva: eats walls that have only one side exposed can only move orthogonally
-gelatinous cubes: must stay in contact with a wall at all times. if attacked they excrete a wall, they eat wall slime and hammer-crabs if they find them
+gelatinous cubes: must stay in contact with a wall at all times. if attacked they excrete a wall, they eat wall slime
 moles: eat cubes,  can only destroy walls that are unsupported on the opposite side and flanked by two solid walls
-hammercrab: destroys any walls that are exposed on three or more faces,can move slowly on the y axis, eats trantoros 
+hammercrab: destroys any walls that are exposed on three or more faces,can move slowly on the y axis, eats trantoros and wallslime seeds
 
 current planned creatures
 Giant Worm:	eats larva, if it gets stuck it turns and knocks out a wall
@@ -29,6 +30,6 @@ trapper:	lays down traps to catch prey
 Ballistomycete: when it explodes it produces a few giant spores.
 giant spore: once about every 40 turns it produces a Ballistomycete. it leaves a trail of mold covered tiles. when it dies it explodes into several Ballistomycetes
 Dwarf prospector: carves out an exponential random walk and deposits doors randomly when diggin out a tile
-dwarf minor: (haha) it carves out tiles that are exposed on one corner and it's two orthagonal sides but aren't next to a door
+dwarf minor: it carves out tiles that are exposed on one corner and it's two orthagonal sides but aren't next to a door
 Dragon: if a dwarf walks on a large enough pile of gold it turns into a dragon
 spanish eels: hunt in packs and freeze prey

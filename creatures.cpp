@@ -54,7 +54,7 @@ using namespace std;
 			for(list<item*>::iterator i=map[y][x].begin(); i != map[y][x].end(); i++)
 				if((*i)==this)
 					map[y][x].erase(i);
-			map[a][b].push_front(this);
+			map[a][b].push_back(this); //so that creatures that move later show up on top
 			y=a;
 			x=b;
 		}
@@ -75,6 +75,8 @@ using namespace std;
 		solid=true;
 		translucent=false;
 		dead=false;
+		egg=false;
+		eggeater=false;
 		for(int i=0;i<10 && directionblocked();++i)
 		{
 			set(rand()%Y,rand()%X);
@@ -183,7 +185,7 @@ using namespace std;
 					if((*i)->sameplace(a,b) && (*i)!=this)
 					{
 						for(list<string>::const_iterator j=edible.begin();j !=edible.end();j++)
-							if((*i)->Cname==(*j))
+							if((*i)->Cname==(*j) ||(eggeater==true && (*i)->egg==true))
 							{
 								(*i)->energy-=5;
 								energy+=5;
@@ -350,6 +352,7 @@ using namespace std;
 	{
 		Cname="Hammer Crab";
 		hue=6;
+		eggeater=true;
 	}
 	int crab::directionblocked()
 	{

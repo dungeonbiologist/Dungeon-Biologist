@@ -8,16 +8,16 @@
 #include "globals.h"
 using namespace std;
 /***************************/
-	plant::plant(char c) : creature(c){seed=true;}
+	plant::plant(char c) : creature(c){egg=true;}
 	void plant::appear()
 	{
 		item::appear();
-		if(seed==true)
+		if(egg==true)
 		view[y][x]=',';
 	}
 	bool plant::sprout()
 	{
-		if(seed==true)
+		if(egg==true)
 		{
 			for(int i=-1;i<2;++i)
 				for(int j=-1;j<2;++j)
@@ -27,7 +27,7 @@ using namespace std;
 					if(!directionblocked())
 					{
 						move();
-						seed=false;
+						egg=false;
 						return true;
 					}
 				}
@@ -49,7 +49,7 @@ using namespace std;
 	{
 		sprout();
 		energy++;
-		if(seed==false)
+		if(egg==false)
 		{
 			energy+=rand()%3/2;
 			reproduce();
