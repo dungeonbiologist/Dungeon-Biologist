@@ -27,7 +27,10 @@ using namespace std;
 					if(!directionblocked())
 					{
 						move();
-						egg=false;
+						v.y=0;
+						v.x=0;
+						if(!directionblocked())
+							egg=false;
 						return true;
 					}
 				}
@@ -39,7 +42,7 @@ using namespace std;
 	{
 		Cname="Wall slime";
 		hue=4;
-//		small=true;
+		small=true;
 		while(wall[y][x]==0)
 		{
 			set(rand()%Y,rand()%X);
@@ -47,18 +50,18 @@ using namespace std;
 	}
 	void slime::update()
 	{
-		sprout();
 		energy++;
-		if(egg==false)
+		if(heldby==NULL)
 		{
-			energy+=rand()%3/2;
-			reproduce();
-			if(wall[y][x]==0)
-				hp=0;
+			if(egg==false)
+			{
+				energy+=rand()%2;
+				reproduce();
+				if(wall[y][x]==0)
+					hp=0;
+			}
+			sprout();
 		}
-		v.y=0;
-		v.x=0;
-		move();
 	}
 	int slime::directionblocked()
 	{
@@ -91,7 +94,7 @@ using namespace std;
 				monsterlist.push_front(new slime);
 				energy-=100;
 				list<creature*>::const_iterator i=monsterlist.begin();
-				(*i)->set(y+v.y,x+v.x);
+					(*i)->set(y+v.y,x+v.x);
 				return true;
 			}
 		}

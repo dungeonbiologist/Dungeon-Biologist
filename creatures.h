@@ -32,7 +32,10 @@ struct tile
 };
 struct item:tile
 {
+	bool small; //doesn't block creatures
 	vect v;
+	string Cname;
+	item* heldby;
 	char appearance;
 	int hue;
 	virtual void update();
@@ -45,12 +48,10 @@ struct creature:item
 	creature(char c);
 	int hp,ap; //action points
 	int speed;
-	string Cname;
 	list <string> edible;
 	list <item*> held;
 	list <tile> memory;
 	int energy;	//uses for special abilities and reproduceing
-	bool small; //doesn't block other creatures
 	bool solid;	//can't walk through walls
 	bool translucent;	//tints any tiles that you see past it
 	bool dead;
@@ -58,7 +59,7 @@ struct creature:item
 	bool eggeater; //it can eat any type of eggs
 	virtual void update();
 	virtual void die();
-	virtual void move();
+	virtual bool move();
 	virtual int directionblocked();
 	virtual void choosemove1(int a);
 	virtual bool dig();
@@ -70,6 +71,8 @@ struct creature:item
 	virtual bool eat();
 	virtual void run(int distance);
 	virtual bool reproduce();
+	virtual bool pickup(string itemname);
+	virtual bool drop();
 };
 /***************************/
 struct me: creature

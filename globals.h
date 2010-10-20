@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <curses.h>
 #include <iostream>
+#include <fstream>
 #include <list>
 #include "creatures.h"
 using namespace std;
@@ -20,4 +21,6 @@ using namespace std;
 	extern int color[viewY][viewX];
 	extern list<creature*> monsterlist;
 	extern me cursor;
+	void save();
+	void load();
 #endif

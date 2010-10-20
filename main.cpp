@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <curses.h>
 #include <iostream>
+#include <fstream>
 #include <list>
 #include "creatures.h"
 #include "plants.h"
@@ -43,7 +44,7 @@ void init()
 	{
 		for(int x=0; x<X; x++)
 		{
-			wall[y][x]=1;//(rand()%5)/4;
+			wall[y][x]=y%2;//(rand()%5)/4;
 		}
 	}
 	for(int a=0; a<viewY; a++)
@@ -60,15 +61,14 @@ void init()
 	/************************************************************/
 	for(int i=0;i<5;++i)
 	{
-		for(int j=0;j<15;++j)
-			monsterlist.push_front(new larva);	//creates some tunnelers
+//		monsterlist.push_front(new larva);	//creates some tunnelers
 //		monsterlist.push_front(new crab);	//creates some hammercrabs
 //		monsterlist.push_front(new slime);	//food
-		monsterlist.push_front(new slime);
+//		monsterlist.push_front(new slime);
 //		monsterlist.push_front(new cube);	//creates some gelatinous cubes
 	}
 //	monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
-	monsterlist.push_front(new dwarf);
+//	monsterlist.push_front(new dwarf);
 	monsterlist.push_front(&cursor);	//places you into existance on this world
 }
 /***************************/
@@ -106,3 +106,40 @@ int main()
 	endwin();		// end curses control of the window
 }
 /***************************/
+void load()
+{
+	ifstream savefile("save.txt");
+	if (savefile.is_open())
+	{
+		char c;
+		for(int y=0;!savefile.eof() && y<Y;y++)
+		{
+			savefile.get(c);
+			for(int x=0;'\n'!= c && x<X;x++)
+			{
+				if(c=='#')
+					wall[y][x]=1;
+				else
+					wall[y][x]=0;
+				savefile.get(c);
+			}
+		}
+		savefile.close();
+	}
+}
+void save()
+{
+	ofstream savefile("save.txt");
+	for(int y=0;y<Y;y++)
+	{
+		for(int x=0;x<X;x++)
+		{
+			if(wall[y][x]==1)
+				savefile.put('#');
+			else
+				savefile.put('.');
+		}
+		savefile.put('\n');
+	}
+	savefile.close();
+}

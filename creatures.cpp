@@ -45,6 +45,8 @@ using namespace std;
 		set(a,b);
 		appearance=c;
 		hue=1;
+		heldby=NULL;
+		small=false;
 	}
 	void item::update(){}
 	bool item::set(int a,int b)
@@ -71,7 +73,6 @@ using namespace std;
 		speed=100;
 		ap=0;
 		energy=100;
-		small=true;
 		solid=true;
 		translucent=false;
 		dead=false;
@@ -83,16 +84,17 @@ using namespace std;
 		}
 	}
 	/***********************/
-	void creature::move()
+	bool creature::move()
 	{
 		int a=v.y+y;
 		int b=v.x+x;
-		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-			if((*i)->sameplace(a,b) && (*i)!=this && (*i)->small!=true)
-				return;
+		for(list<item*>::iterator i=map[a][b].begin(); i != map[a][b].end(); i++)	//checks wether there is a creature blocking this move
+			if((*i)!=this && (*i)->small != true)
+				return false;
 		if(legal(a,b) && !directionblocked())
 		{
 			set(a,b);
+			return true;
 		}
 	}
 	/***********************/
@@ -206,6 +208,33 @@ using namespace std;
 		}
 	}
 	bool creature::reproduce(){}
+	/***********************/
+	bool creature::pickup(string itemname)
+	{
+		for(list<item*>::iterator i=map[y][x].begin();i !=map[y][x].end();i++)
+			if((*i)->Cname==itemname)
+			{
+				held.push_front((*i));
+				(*i)->heldby=this;
+				map[y][x].erase(i);
+				return true;
+			}
+		return false;
+	}
+	/***********************/
+	bool creature::drop()
+	{
+		for(list<item*>::iterator i=held.begin();i !=held.end();i++)
+		{
+			map[y][x].push_front((*i));
+			(*i)->y=y;
+			(*i)->x=x;
+			(*i)->heldby=NULL;
+			held.erase(i);
+			return true;
+		}
+		return false;
+	}
 /***************************/
 	me::me(): creature('@')
 	{
@@ -220,13 +249,13 @@ using namespace std;
 		{
 			v.y=0;
 			v.x=0;
-				if(inchar=='w' ||inchar=='7'||inchar=='8'||inchar=='9')
+				if(inchar=='7'||inchar=='8'||inchar=='9')
 					v.y=-1;
-				if(inchar=='s'||inchar=='1'||inchar=='2'||inchar=='3')
+				if(inchar=='1'||inchar=='2'||inchar=='3')
 					v.y=1;
-				if(inchar=='a'||inchar=='7'||inchar=='4'||inchar=='1')
+				if(inchar=='7'||inchar=='4'||inchar=='1')
 					v.x=-1;
-				if(inchar=='d'||inchar=='3'||inchar=='6'||inchar=='9')
+				if(inchar=='3'||inchar=='6'||inchar=='9')
 					v.x=1;
 				else if(inchar==' ')
 					wall[y][x]^=1;
@@ -242,6 +271,14 @@ using namespace std;
 					monsterlist.push_front(new larva);	//create some tunnels
 				else if(inchar=='D')
 					monsterlist.push_front(new dwarf);	//create some tunnels
+				else if(inchar=='p')
+					pickup("Wall slime");
+				else if(inchar=='o')
+					drop();
+				else if(inchar=='s')
+					save();
+				else if(inchar=='l')
+					load();
 //				avoidobstacles(1);
 				move();
 		}
@@ -284,6 +321,9 @@ using namespace std;
 	void cube::update()
 	{
 		eat();
+		pickup("Wall slime");
+		if(rand()%3==0)
+			drop();
 		reproduce();
 		move2(3);
 		avoidobstacles(3);
