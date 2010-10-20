@@ -14,5 +14,11 @@ struct slime: plant
 	virtual int directionblocked();
 	virtual bool reproduce();
 };
+struct moss: plant
+{
+	moss();
+	virtual void update();
+	virtual bool reproduce();
+};
 #define PLANTS
 #endif

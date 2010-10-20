@@ -88,10 +88,12 @@ using namespace std;
 	{
 		int a=v.y+y;
 		int b=v.x+x;
+		if(!legal(a,b))		//always do this check first
+			return true;
 		for(list<item*>::iterator i=map[a][b].begin(); i != map[a][b].end(); i++)	//checks wether there is a creature blocking this move
 			if((*i)!=this && (*i)->small != true)
 				return false;
-		if(legal(a,b) && !directionblocked())
+		if(!directionblocked())
 		{
 			set(a,b);
 			return true;
@@ -271,6 +273,8 @@ using namespace std;
 					monsterlist.push_front(new larva);	//create some tunnels
 				else if(inchar=='D')
 					monsterlist.push_front(new dwarf);	//create some tunnels
+				else if(inchar==';')
+					monsterlist.push_front(new moss);	//create some tunnels
 				else if(inchar=='p')
 					pickup("Wall slime");
 				else if(inchar=='o')

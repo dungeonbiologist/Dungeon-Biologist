@@ -100,3 +100,49 @@ using namespace std;
 		}
 	}
 /***************************/
+	moss::moss():plant(';')
+	{
+		Cname="moss";
+		hue=4;
+		small=true;
+	}
+	void moss::update()
+	{
+		energy++;
+		if(heldby==NULL)
+		{
+			if(egg==false)
+			{
+				energy+=rand()%2;
+				reproduce();
+				if(wall[y][x])
+					hp=0;
+			}
+			sprout();
+		}
+	}
+	bool moss::reproduce()
+	{
+		if(energy>200)
+		{
+			if(wall[y+1][x]&& wall[y-1][x]&& wall[y][x+1]&& wall[y][x-1])
+				return false;
+			else
+			{
+				v.y=-1;
+				v.x=0;
+				for(int i=0;i<4;++i)
+				{
+					v.turn(-1);
+					v.turn(-1);
+					if(legal(y+v.y,x+v.x) && wall[y+v.y][x+v.x]==0 && map[y+v.y][x+v.x].size()==0)
+						break;
+				}
+				monsterlist.push_front(new moss);
+				energy-=100;
+				list<creature*>::const_iterator i=monsterlist.begin();
+					(*i)->set(y+v.y,x+v.x);
+				return true;
+			}
+		}
+	}
