@@ -38,7 +38,7 @@ void print()
 		bresenham(cursor.y,Y,cursor.x,x);
 		bresenham(cursor.y,-1,cursor.x,x);
 	}
-*/
+//*/
 	clear();
 	for(int y=0; y<viewY; y++)
 		for(int x=0; x<viewX; x++)
@@ -53,6 +53,55 @@ void print()
 			visible[y][x]=false;
 		}
 	refresh();		// refresh the screen
+}
+/***************************/
+void printtext(int a, int b, char pstring[])
+{
+	for(int i=0; pstring[i]!='\0'; i++)
+	{
+//		if(inView(a,b+i))
+//			VIEW[a][b+i] = pstring[i];
+		mvaddch(a, b*2+i,pstring[i]);
+	}
+}
+/***************************/
+void printcentered(int a, char pstring[])
+{
+	int offset=0;
+	for(int i=0; pstring[i]!='\0'; i++)
+		offset++;
+	offset /= 2;
+	printtext(a, viewX/2-offset, pstring);
+}
+/***************************/
+char* convert(int number, char* pstring)
+{
+	number=abs(number);
+	if(number > 9)
+		pstring = convert(number/10, pstring);
+	number = number%10;
+	pstring[0] = char(number+'0'); //places the number translated into a charecter
+	return &pstring[1];
+}
+/***************************/
+void printNumber(int a, int b, int number)
+{
+	int count=1;
+	while(number/(10*count) != 0)
+		count++;
+	if(number < 0)
+	{
+		char pstring[count+2];
+		*convert(number, &pstring[1])='\0';	//we add a terminateing character to the end of the string
+		pstring[0]='-';
+		printtext(a,b,pstring);
+	}
+	else
+	{
+		char pstring[count+1];
+		*convert(number, pstring)='\0';	//we add a terminateing character to the end of the string
+		printtext(a,b,pstring);
+	}
 }
 /***************************/
 int abs(int a)

@@ -24,6 +24,16 @@ struct vect
 	trit operator < (vect param);
 	trit operator > (vect param);
 };
+/*
+//things that make a creature more difficult to eat
+#define live	(1 << 0)
+#define egg		(1 << 1)
+#define moveing	(1 << 2)	//not paralyzed
+#define stone	(1 << 3)
+#define plant	(1 << 4)
+#define animal	(1 << 5)
+#define yucky	(1 << 6)
+*/
 struct tile
 {
 	tile();
@@ -46,7 +56,10 @@ struct item:tile
 struct creature:item
 {
 	creature(char c);
-	int hp,ap; //action points
+	int hp;
+	int ap; //action points
+	int defenses;	//bitfield of defensive properties
+	int overcome;	//bitfield of overcomeing those defensive properties
 	int speed;
 	list <string> edible;
 	list <item*> held;
@@ -102,11 +115,18 @@ struct crab: creature
 	crab();
 	virtual int directionblocked();
 	virtual void update();
+	virtual bool reproduce();
 };
 struct mole: creature
 {
 	mole();
 	virtual int directionblocked();
+	virtual void update();
+	virtual bool reproduce();
+};
+struct trantoro: creature
+{
+	trantoro();
 	virtual void update();
 	virtual bool reproduce();
 };

@@ -18,6 +18,7 @@ struct moss: plant
 {
 	moss();
 	virtual void update();
+	virtual int directionblocked();
 	virtual bool reproduce();
 };
 #define PLANTS

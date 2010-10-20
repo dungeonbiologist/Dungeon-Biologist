@@ -19,21 +19,24 @@ using namespace std;
 	{
 		if(egg==true)
 		{
-			for(int i=-1;i<2;++i)
-				for(int j=-1;j<2;++j)
+			v.y=0;
+			v.x=0;
+			if(directionblocked())
+			{
+				v.y=1;
+				v.x=1;
+				for(int i=0;directionblocked()&& i<8;++i)
+					v.turn(-1);
+			}
+			if(!directionblocked())
+			{
+				move();
+				if(!directionblocked())
 				{
-					v.y=i;
-					v.x=j;
-					if(!directionblocked())
-					{
-						move();
-						v.y=0;
-						v.x=0;
-						if(!directionblocked())
-							egg=false;
-						return true;
-					}
+					egg=false;
+					return true;
 				}
+			}
 		}
 		return false;
 	}
@@ -50,6 +53,7 @@ using namespace std;
 	}
 	void slime::update()
 	{
+		creature::update();
 		energy++;
 		if(heldby==NULL)
 		{
@@ -102,12 +106,13 @@ using namespace std;
 /***************************/
 	moss::moss():plant(';')
 	{
-		Cname="moss";
+		Cname="Moss";
 		hue=4;
 		small=true;
 	}
 	void moss::update()
 	{
+		creature::update();
 		energy++;
 		if(heldby==NULL)
 		{
@@ -121,28 +126,35 @@ using namespace std;
 			sprout();
 		}
 	}
+	int moss::directionblocked()
+	{
+		int a=v.y+y;
+		int b=v.x+x;
+		if(!legal(a,b) || wall[a][b])
+			return true;
+		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+			if((*i)->sameplace(a,b) && (*i)!=this)
+				return 1;
+		return false;
+	}
 	bool moss::reproduce()
 	{
 		if(energy>200)
 		{
-			if(wall[y+1][x]&& wall[y-1][x]&& wall[y][x+1]&& wall[y][x-1])
-				return false;
-			else
+			v.y=-1;
+			v.x=0;
+			for(int i=0;i<9;++i)
 			{
-				v.y=-1;
-				v.x=0;
-				for(int i=0;i<4;++i)
-				{
-					v.turn(-1);
-					v.turn(-1);
-					if(legal(y+v.y,x+v.x) && wall[y+v.y][x+v.x]==0 && map[y+v.y][x+v.x].size()==0)
-						break;
-				}
-				monsterlist.push_front(new moss);
-				energy-=100;
-				list<creature*>::const_iterator i=monsterlist.begin();
-					(*i)->set(y+v.y,x+v.x);
-				return true;
+				v.turn(-1);
+				if(legal(y+v.y,x+v.x) && wall[y+v.y][x+v.x]==0 && map[y+v.y][x+v.x].size()==0)
+					break;
+				if(i==8)	//if it has gone all the way around
+					return false;
 			}
+			monsterlist.push_front(new moss);
+			energy-=100;
+			list<creature*>::const_iterator i=monsterlist.begin();
+				(*i)->set(y+v.y,x+v.x);
+			return true;
 		}
 	}

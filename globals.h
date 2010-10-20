@@ -8,6 +8,7 @@ using namespace std;
 #ifndef GLOBALS
 #define GLOBALS
 	#define legal(a,b) (a>=0 && a<Y && b>=0 && b<X)
+	#define inView(a,b) (a>=0 && a<viewY && b>=0 && b<viewX)
 	#define viewY 20		//height of view	
 	#define viewX 40		//1/2 width of veiw
 	#define Y 20		//height of world

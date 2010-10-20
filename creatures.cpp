@@ -6,6 +6,7 @@
 #include "creatures.h"
 #include "plants.h"
 #include "globals.h"
+#include "display.h"
 using namespace std;
 
 /***************************/
@@ -114,9 +115,13 @@ using namespace std;
 	/***********************/
 	void creature::update()
 	{
-		choosemove1(1);
-		avoidobstacles(4);
-		move();
+		if(hp<=0)
+			die();
+		ap+=speed;
+		energy--;
+		if(ap<100 || dead)
+			return;
+		ap-=100;
 	}
 	/***********************/
 	void creature::choosemove1(int a)
@@ -132,7 +137,7 @@ using namespace std;
 	{
 		int a=y+v.y;
 		int b=x+v.x;
-		if(legal(a,b) && wall[a][b])
+		if(legal(a,b) && wall[a][b] && map[a][b].size()==0)
 		{
 			wall[a][b]=0;
 			return true;
@@ -245,6 +250,7 @@ using namespace std;
 	}
 	void me::update()
 	{
+		creature::update();
 		energy++;
 		inchar = char(getch());
 		if(inchar != ERR)
@@ -273,6 +279,8 @@ using namespace std;
 					monsterlist.push_front(new larva);	//create some tunnels
 				else if(inchar=='D')
 					monsterlist.push_front(new dwarf);	//create some tunnels
+				else if(inchar=='t')
+					monsterlist.push_front(new trantoro);	//create some tunnels
 				else if(inchar==';')
 					monsterlist.push_front(new moss);	//create some tunnels
 				else if(inchar=='p')
@@ -283,7 +291,6 @@ using namespace std;
 					save();
 				else if(inchar=='l')
 					load();
-//				avoidobstacles(1);
 				move();
 		}
 	}
@@ -324,6 +331,7 @@ using namespace std;
 	}
 	void cube::update()
 	{
+		creature::update();
 		eat();
 		pickup("Wall slime");
 		if(rand()%3==0)
@@ -355,12 +363,12 @@ using namespace std;
 	{
 		int a=v.y+y;
 		int b=v.x+x;
-		if(!legal(a,a))
+		if(!legal(a,b))
 			return true;
 		for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 			if((*i)->sameplace(a,b) && (*i)!=this && !(*i)->small)
 				return 1;
-		if(wall[a][b] && v.y*v.x != 0)
+		if(wall[a][b] && (v.y*v.x != 0 || map[a][b].size()>0 ))
 			return true;
 		if(wall[a][b]) //you can only remove walls when you are moveing orthagonally
 		{
@@ -377,15 +385,15 @@ using namespace std;
 	}
 	void larva::update()
 	{
+		creature::update();
 		choosemove1(1);
 		eat();
 		move();
 	}
 	bool larva::eat()
 	{
-		if(wall[y+v.y][x+v.x]&&!directionblocked())
+		if(!blocked && dig()==true)
 		{
-			wall[y+v.y][x+v.x]=0;
 			energy+=100;
 			return true;
 		}
@@ -397,6 +405,7 @@ using namespace std;
 		Cname="Hammer Crab";
 		hue=6;
 		eggeater=true;
+		edible.push_front("Trantoro");
 	}
 	int crab::directionblocked()
 	{
@@ -414,7 +423,25 @@ using namespace std;
 		}
 		return false;
 	}
-	void crab::update(){choosemove1(2);avoidobstacles(3);move();wall[y][x]=0;}
+	void crab::update()
+	{
+		creature::update();
+		choosemove1(2);
+		avoidobstacles(3);
+		dig();
+		move();
+	}
+	bool crab::reproduce()
+	{
+		if(energy>800)
+		{
+			monsterlist.push_front(new crab);
+			list<creature*>::const_iterator i=monsterlist.begin();
+			(*i)->set(y,x);
+			(*i)->energy=200;
+			energy-=500;
+		}
+	}
 /***************************/
 	mole::mole():creature('m')
 	{
@@ -444,24 +471,52 @@ using namespace std;
 	}
 	void mole::update()
 	{
+		creature::update();
+		eat();
+		reproduce();
+		choosemove1(3);
+		avoidobstacles(3);
+		dig();
+		move();
+	}
+	bool mole::reproduce()
+	{
+		if(energy>800)
+		{
+			monsterlist.push_front(new mole);
+			list<creature*>::const_iterator i=monsterlist.begin();
+			(*i)->set(y,x);
+			(*i)->energy=200;
+			energy-=500;
+		}
+	}
+/***************************/
+	trantoro::trantoro():creature('t')
+	{
+		Cname="Trantoro";
+		hue=3;//yellow
+		edible.push_front("Moss");
+		small=true;
+	}
+	void trantoro::update()
+	{
+		creature::update();
 		eat();
 		reproduce();
 		choosemove1(3);
 		avoidobstacles(3);
 		move();
-		wall[y][x]=0;
 	}
-	bool mole::reproduce()
+	bool trantoro::reproduce()
 	{
-/*		if(energy>800)
+		if(energy>300)
 		{
-			monsterlist.push_front(new mole);
+			monsterlist.push_front(new trantoro);
 			list<creature*>::const_iterator i=monsterlist.begin();
-			set(y,x);
-			(*i)->energy=200;
-			energy-=500;
+			(*i)->set(y,x);
+			energy=150;
 		}
-*/	}
+	}
 /***************************/
 	dwarf::dwarf():creature('d')
 	{
@@ -474,6 +529,7 @@ using namespace std;
 	}
 	void dwarf::update()
 	{
+		creature::update();
 		if(diglength==0)
 			diglength=pow(2,rand()%6);
 		if(diglength==1 || directionblocked())

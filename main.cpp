@@ -80,15 +80,7 @@ int main()
 		print();
 		for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
 		{
-			if(((*i)->hp)<=0)
-				(*i)->die();
-			(*i)->ap+=(*i)->speed;
-			(*i)->energy--;
-			if((*i)->ap>=100 && !(*i)->dead)
-			{
-				(*i)->ap-=100;
-				(*i)->update();
-			}
+			(*i)->update();
 			if(((*i)->energy)<=0)//HACK!! this is a memory leak, this creature hasn't actually been deleted
 			{
 				int a=(*i)->y;
