@@ -14,14 +14,25 @@ using namespace std;
 	#define Y 20		//height of world
 	#define X 40		//width of world
 	extern int wall[Y][X];
-	extern list <item*> map[Y][X];
+	extern list <creature*> map[Y][X];
 	extern char inchar;
 	extern int turncount;
 	extern char view[viewY][viewX];
 	extern bool visible[viewY][viewX];
 	extern int color[viewY][viewX];
-	extern list<creature*> monsterlist;
-	extern me cursor;
-	void save();
-	void load();
+	extern list <creature*> monsterlist;
+	extern list <creature*> prototypes;
+struct errorfile
+{
+	int linenum;
+	ofstream myfile;
+	void log(string error)
+	{
+		if (!myfile.is_open())
+			myfile.open("error.txt");
+  		if (myfile.is_open())
+			myfile << error << "\n";
+	}
+};
+extern errorfile parseError;
 #endif

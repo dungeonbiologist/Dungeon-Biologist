@@ -1,11 +1,10 @@
 Dungeon biologist is a work in progress which intends to become a dungeon ecology simulation
 
-'L' adds a larva
-'H' adds a hammercrab
-'M' adds a mole
-'C' add a gelatinous cube
-'D' adds a dwarf
-'S'	adds a wallslime 
+'l' adds a larva
+'h' adds a hammercrab
+'m' adds a mole
+'c' add a gelatinous cube
+edit creatures.cpp "void creature::moveManual(int prob)" to add more creatures
 
 Larva: eats walls that have only one side exposed can only move orthogonally
 gelatinous cubes: must stay in contact with a wall at all times. if attacked they excrete a wall, they eat wall slime

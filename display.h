@@ -3,7 +3,7 @@
 	void print();
 	void init();
 	int abs(int a);
-	void printtext(int a, int b, char pstring[]);
+	void printtext(int a, int b, string text);
 	void printcentered(int a, char pstring[]);
 	char* convert(int number, char* pstring);
 	void printNumber(int a, int b, int number);

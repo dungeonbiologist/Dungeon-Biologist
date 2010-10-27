@@ -9,7 +9,7 @@ using namespace std;
 /***************************/
 void print()
 {
-	list<item*>::iterator i;
+//	list<creature*>::iterator i;
 	for(int y=0; y<Y; y++)
 		for(int x=0; x<X; x++)
 		{
@@ -17,16 +17,15 @@ void print()
 				view[y][x]='#';
 			else
 				view[y][x]='.';
-			for(i=map[y][x].begin();i != map[y][x].end();i++)
-			{
-				(*i)->appear();
+//			for(i=map[y][x].begin();i != map[y][x].end();i++)
+//			{
+//				(*i)->appear();
 //				if((*i)->x !=x ||(*i)->y !=y)		//DANGER! this could conceal a bug, fix what causes the disreprency first
 //					map[y][x].erase(i);
-			}
+//			}
 		}
-//	for(list<creature*>::const_iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-//		(*i)->appear();
-	view[cursor.y][cursor.x]=cursor.appearance;
+	for(list<creature*>::const_iterator j=monsterlist.begin();j !=monsterlist.end();j++)
+		(*j)->appear();
 /*
 	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
 	{
@@ -55,13 +54,15 @@ void print()
 	refresh();		// refresh the screen
 }
 /***************************/
-void printtext(int a, int b, char pstring[])
+void printtext(int a, int b, string text)
 {
-	for(int i=0; pstring[i]!='\0'; i++)
+	string::iterator i=text.begin();
+	for(int j=0; i < text.end(); ++i )
 	{
 //		if(inView(a,b+i))
 //			VIEW[a][b+i] = pstring[i];
-		mvaddch(a, b*2+i,pstring[i]);
+		mvaddch(a, b*2+j,*i);
+		++j;
 	}
 }
 /***************************/
@@ -146,12 +147,12 @@ void bresenham(int y0,int y1,int x0,int x1)
 				color[x][y]=lightcolor;
 			if(wall[x][y])
 				return;
-			for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-				if((*i)->sameplace(x,y) && (*i)->translucent==true)
-				{
-					lightcolor=(*i)->hue;
-					colored=true;
-				}
+//			for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+//				if((*i)->sameplace(x,y) && (*i)->translucent==true)
+//				{
+//					lightcolor=(*i)->hue;
+//					colored=true;
+//				}
 		}
 		else if(legal(y,x))
 		{
@@ -160,12 +161,12 @@ void bresenham(int y0,int y1,int x0,int x1)
 				color[y][x]=lightcolor;
 			if(wall[y][x])
 				return;
-			for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-				if((*i)->sameplace(y,x) && (*i)->translucent==true)
-				{
-					lightcolor=(*i)->hue;
-					colored=true;
-				}
+//			for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
+//				if((*i)->sameplace(y,x) && (*i)->translucent==true)
+//				{
+//					lightcolor=(*i)->hue;
+//					colored=true;
+//				}
 		}
 		error -= deltay;
 		if(error < 0)

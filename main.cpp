@@ -1,26 +1,45 @@
-//g++ larva.o creatures.o -lcurses
 #include <cstdlib>
-#include <curses.h>
 #include <iostream>
 #include <fstream>
 #include <list>
-#include "creatures.h"
-#include "plants.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "globals.h"
+#include "creatures.h"
+#include "parser.h"
 #include "display.h"
 using namespace std;
 /***************************/
+	list <creature*> prototypes;
 	int wall[Y][X];
-	list <item*> map[Y][X];
+	list <creature*> map[Y][X];
 	char inchar;
 	int turncount;
 	char view[viewY][viewX];
 	bool visible[viewY][viewX];
 	int color[viewY][viewX];
 	list<creature*> monsterlist;
-	me cursor;
 /***************************/
-void init();
+	void init();
+/***************************/
+int main()
+{
+	parse("creatures.txt");
+	init();
+	creature player;
+	player.y=Y/2;
+	player.x=X/2;
+	player.isType("PLAYER");
+	while(inchar != 'q')
+	{
+		print();
+		for(list<creature*>::const_iterator j=monsterlist.begin();j !=monsterlist.end();j++)
+			(*j) ->update();
+	}
+	refresh();
+	echo();			// turn echoing back on before exiting
+	endwin();		// end curses control of the window
+}
 /***************************/
 void init()
 {
@@ -31,20 +50,21 @@ void init()
 	clear();				// clear the window
 	noecho();				// don't show typed characters on the screen
 	start_color();
-		init_pair(0, COLOR_WHITE, COLOR_BLACK);
-		init_pair(1, COLOR_RED, COLOR_BLACK);
-		init_pair(2, COLOR_BLUE, COLOR_BLACK);
-		init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-		init_pair(4, COLOR_GREEN, COLOR_BLACK);
-		init_pair(5, COLOR_CYAN, COLOR_BLACK);
-		init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-		init_pair(7, COLOR_WHITE, COLOR_RED);
+		init_pair(0,	COLOR_BLACK,	COLOR_BLACK);
+		init_pair(1,	COLOR_WHITE,	COLOR_BLACK);
+		init_pair(2,	COLOR_RED,		COLOR_BLACK);
+		init_pair(3,	COLOR_YELLOW,	COLOR_BLACK);
+		init_pair(4,	COLOR_GREEN,	COLOR_BLACK);
+		init_pair(5,	COLOR_CYAN,		COLOR_BLACK);
+		init_pair(6,	COLOR_BLUE,		COLOR_BLACK);
+		init_pair(7,	COLOR_MAGENTA,	COLOR_BLACK);
 	turncount=0;
+	
 	for(int y=0; y<Y; y++)
 	{
 		for(int x=0; x<X; x++)
 		{
-			wall[y][x]=y%2;//(rand()%5)/4;
+			wall[y][x]=1;//(rand()%5)/4;	//1/5th of the time it==1
 		}
 	}
 	for(int a=0; a<viewY; a++)
@@ -56,82 +76,5 @@ void init()
 			color[a][b]=0;
 		}
 	}
-	/************************************************************/
-	/** Edit this if you want to change which monsters show up **/
-	/************************************************************/
-	for(int i=0;i<5;++i)
-	{
-//		monsterlist.push_front(new larva);	//creates some tunnelers
-//		monsterlist.push_front(new crab);	//creates some hammercrabs
-//		monsterlist.push_front(new slime);	//food
-//		monsterlist.push_front(new slime);
-//		monsterlist.push_front(new cube);	//creates some gelatinous cubes
-	}
-//	monsterlist.push_front(new mole);	//creates come coolaid mascots (they burst through walls)
-//	monsterlist.push_front(new dwarf);
-	monsterlist.push_front(&cursor);	//places you into existance on this world
 }
 /***************************/
-int main()
-{
-	init();
-	while(inchar!='q')	//press q to quit
-	{
-		print();
-		for(list<creature*>::iterator i=monsterlist.begin();i !=monsterlist.end();i++)
-		{
-			(*i)->update();
-			if(((*i)->energy)<=0)//HACK!! this is a memory leak, this creature hasn't actually been deleted
-			{
-				int a=(*i)->y;
-				int b=(*i)->x;
-				for(list<item*>::iterator j=map[a][b].begin(); j != map[a][b].end(); j++)
-					if((*j)==(*i))
-						map[a][b].erase(j);
-				monsterlist.erase(i);
-			}
-		}
-		++turncount;
-	}
-	refresh();
-	echo();			// turn echoing back on before exiting
-	endwin();		// end curses control of the window
-}
-/***************************/
-void load()
-{
-	ifstream savefile("save.txt");
-	if (savefile.is_open())
-	{
-		char c;
-		for(int y=0;!savefile.eof() && y<Y;y++)
-		{
-			savefile.get(c);
-			for(int x=0;'\n'!= c && x<X;x++)
-			{
-				if(c=='#')
-					wall[y][x]=1;
-				else
-					wall[y][x]=0;
-				savefile.get(c);
-			}
-		}
-		savefile.close();
-	}
-}
-void save()
-{
-	ofstream savefile("save.txt");
-	for(int y=0;y<Y;y++)
-	{
-		for(int x=0;x<X;x++)
-		{
-			if(wall[y][x]==1)
-				savefile.put('#');
-			else
-				savefile.put('.');
-		}
-		savefile.put('\n');
-	}
-	savefile.close();
-}
