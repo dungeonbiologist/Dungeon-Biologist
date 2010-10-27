@@ -4,6 +4,7 @@
 #include <list>
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
 #include "trivect.h"
 using namespace std;
 #ifndef CREATURES

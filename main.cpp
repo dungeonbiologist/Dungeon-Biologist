@@ -13,7 +13,7 @@ using namespace std;
 	list <creature*> prototypes;
 	int wall[Y][X];
 	list <creature*> map[Y][X];
-	char inchar;
+	long inchar;
 	int turncount;
 	char view[viewY][viewX];
 	bool visible[viewY][viewX];
@@ -45,8 +45,9 @@ void init()
 {
 	WINDOW *window;
 	window = initscr();		// set up the curses window
-	srand(time(NULL));	// initializes the random number generator
-//	nodelay(initscr(),true);			// don't wait for user input
+	raw();
+	srand(time(NULL));		// initializes the random number generator
+	keypad(stdscr, TRUE);	// this line allows me to use the enter and arrow keys
 	clear();				// clear the window
 	noecho();				// don't show typed characters on the screen
 	start_color();

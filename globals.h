@@ -4,18 +4,19 @@
 #include <fstream>
 #include <list>
 #include "creatures.h"
+#include "display.h"
 using namespace std;
 #ifndef GLOBALS
 #define GLOBALS
 	#define legal(a,b) (a>=0 && a<Y && b>=0 && b<X)
-	#define inView(a,b) (a>=0 && a<viewY && b>=0 && b<viewX)
+	#define inView(a,b) (a >= 0 && a<viewY && b>=0 && b<viewX)
 	#define viewY 20		//height of view	
 	#define viewX 40		//1/2 width of veiw
 	#define Y 20		//height of world
 	#define X 40		//width of world
 	extern int wall[Y][X];
 	extern list <creature*> map[Y][X];
-	extern char inchar;
+	extern long inchar;
 	extern int turncount;
 	extern char view[viewY][viewX];
 	extern bool visible[viewY][viewX];
@@ -35,4 +36,5 @@ struct errorfile
 	}
 };
 extern errorfile parseError;
+extern Messages input;
 #endif

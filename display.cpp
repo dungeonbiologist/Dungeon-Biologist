@@ -7,9 +7,9 @@
 #include "display.h"
 using namespace std;
 /***************************/
+Messages input;
 void print()
 {
-//	list<creature*>::iterator i;
 	for(int y=0; y<Y; y++)
 		for(int x=0; x<X; x++)
 		{
@@ -26,6 +26,7 @@ void print()
 		}
 	for(list<creature*>::const_iterator j=monsterlist.begin();j !=monsterlist.end();j++)
 		(*j)->appear();
+	input.print();
 /*
 	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
 	{
@@ -59,20 +60,20 @@ void printtext(int a, int b, string text)
 	string::iterator i=text.begin();
 	for(int j=0; i < text.end(); ++i )
 	{
-//		if(inView(a,b+i))
-//			VIEW[a][b+i] = pstring[i];
-		mvaddch(a, b*2+j,*i);
+		if(inView(a,b+j))
+		{
+			view[a][b+j] = (*i);
+			color[a][b+j] = 1;
+		}
 		++j;
 	}
 }
 /***************************/
-void printcentered(int a, char pstring[])
+void printcentered(int a, string text)
 {
-	int offset=0;
-	for(int i=0; pstring[i]!='\0'; i++)
-		offset++;
+	int offset=text.length();
 	offset /= 2;
-	printtext(a, viewX/2-offset, pstring);
+	printtext(a, viewX/2-offset, text);
 }
 /***************************/
 char* convert(int number, char* pstring)

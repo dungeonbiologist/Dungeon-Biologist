@@ -35,8 +35,8 @@ void creature::update()
 //		return;
 //	actionpoints += speed;
 //	if(actionpoints < 100)	return;
-	dig();
 	choosemove(1);
+	dig();
 	move();
 }
 bool creature::move()
@@ -122,48 +122,20 @@ void creature::moveSnake(int prob)
 void creature::moveManual(int prob)
 {
 	energy++;
-	inchar = char(getch());
-	if(inchar != ERR)
+	inchar = getch();
+//	if(inchar != ERR)
 	{
 		v.setTo(0);
-			if(inchar=='7'||inchar=='8'||inchar=='9')
+			if(inchar=='7'||inchar=='8'||inchar=='9' || inchar==KEY_UP)
 				v.y=-1;
-			if(inchar=='1'||inchar=='2'||inchar=='3')
+			if(inchar=='1'||inchar=='2'||inchar=='3' || inchar==KEY_DOWN)
 				v.y=1;
-			if(inchar=='7'||inchar=='4'||inchar=='1')
+			if(inchar=='7'||inchar=='4'||inchar=='1' || inchar==KEY_LEFT)
 				v.x=-1;
-			if(inchar=='3'||inchar=='6'||inchar=='9')
+			if(inchar=='3'||inchar=='6'||inchar=='9' || inchar==KEY_RIGHT)
 				v.x=1;
 			else if(inchar==' ')
 				wall[y][x]^=1;
-			else if(inchar=='c')
-			{
-				creature* temp=new creature;		//because if I just declare a creature it'self it will go out of scope
-				temp->isType("CUBE");
-				temp->y=y;
-				temp->x=x;
-			}
-			else if(inchar=='l')
-			{
-				creature* temp=new creature;		//because if I just declare a creature it'self it will go out of scope
-				temp->isType("LARVA");
-				temp->y=y;
-				temp->x=x;
-			}
-			else if(inchar=='h')
-			{
-				creature* temp=new creature;		//because if I just declare a creature it'self it will go out of scope
-				temp->isType("CRAB");
-				temp->y=y;
-				temp->x=x;
-			}
-			else if(inchar=='m')
-			{
-				creature* temp=new creature;		//because if I just declare a creature it'self it will go out of scope
-				temp->isType("MOLE");
-				temp->y=y;
-				temp->x=x;
-			}
 			else if(inchar=='x')
 			{
 				list<creature*>::iterator i=map[y][x].begin();
@@ -179,6 +151,18 @@ void creature::moveManual(int prob)
 					++j;
 				}
 				getch();
+			}
+			else if(inchar >= 'A' && inchar <= 'Z')
+			{
+				input.message+=inchar;
+			}
+			if (inchar == 10) //KEY_ENTER
+			{		//add a creature to the field
+				creature* temp=new creature;		//because if I just declare a creature by value it will go out of scope
+				temp->isType(input.message);
+				temp->y=y;
+				temp->x=x;
+				input.message.clear();
 			}
 	}
 }
