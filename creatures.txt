@@ -1,0 +1,56 @@
+everything outside of the brackets is ignored
+
+[CREATURE:CUBE]   type "CUBE" in the game to spawn one
+	[NAME:gelatinous cube]
+	[TILE:C][COLOR:RED]
+	[SPEED:50]
+	[MOVE:NORMAL]
+	[SOLID]						can't move through walls
+	[STICKS TO WALLS]			can't move away from them
+	[_YUCKY][_ALIVE][_MOVES]	includeing dashes lets them it know that it is an atribute
+	[EATS_PLANT][EATS_ALIVE]
+
+[CREATURE:MOSS] inside the brackets is whitespace sentive right now, I plan on fixing that
+	[DEFAULT:CUBE]	starts off with all of cube's setting by default
+	[NAME:cave moss]
+	[TILE:;][COLOR:GREEN]
+	[SPEED:100]
+	[MOVE:NONE]
+	[_PLANT][_ALIVE][_EGG][NOT_YUCKY]
+	[CAN'T_EAT_PLANT]
+	
+[CREATURE:PLAYER]
+	[NAME:you]
+	[TILE:@][COLOR:RED]
+	[SPEED:100]
+	[MOVE:MANUAL]
+	[SOLID]
+	[_ANIMAL][_ALIVE]
+	[MAZE DIGGER]
+	
+[CREATURE:LARVA]
+	[NAME:larva]
+	[TILE:~][COLOR:CYAN]
+	[SPEED:100]
+	[MOVE:SNAKE]
+	[SOLID]
+	[_ALIVE][_MOVES]
+	[MAZE DIGGER]
+	
+[CREATURE:CRAB]
+	[NAME:Hammer Crab]
+	[TILE:c][COLOR:YELLOW]
+	[SPEED:100]
+	[MOVE:NORMAL]
+	[SOLID]
+	[_ALIVE][_MOVES]
+	[EROSIVE]		removes walls exposed on three or more sides
+	
+[CREATURE:MOLE]
+	[NAME:Rock Mole]
+	[TILE:M][COLOR:MAGENTA]
+	[SPEED:100]
+	[MOVE:NORMAL]
+	[SOLID]
+	[_ALIVE][_MOVES]
+	[COOLAID MAN]	bursts through walls OH YEAH!!!
