@@ -33,10 +33,11 @@ void creature::update()
 {
 //	if(!(properties & live))
 //		return;
-//	actionpoints += speed;
-//	if(actionpoints < 100)	return;
+	actionpoints += speed;
+	if(actionpoints < 100)	return;
 	choosemove(1);
 	dig();
+	avoidobstacles(2);	//find a workable path
 	move();
 }
 bool creature::move()
@@ -78,6 +79,33 @@ bool creature::adjacenttoWalls()
 			return false;
 		if(legal(a,b+i) && wall[a][b+i] &1)
 			return false;
+	}
+	return true;
+}
+bool creature::avoidobstacles(int angle) //angel = how far they can turn
+{
+	if(angle>4)angle=4;
+	if(angle<0)angle=0;
+	if(blocked())
+	{
+		int a=rand()%2*2-1;
+		vect left,right,old;
+		old=v;
+		left=v;	//abstractly left, it could actually be either direction
+		right=v;	//opposite of 'left'
+		for(int i=0;i<angle;++i)
+		{
+			right.turn(a);
+			left.turn(-a);
+			v=right;
+			if(!blocked())
+				return true;
+			v=left;
+			if(!blocked())
+				return true;
+		}
+		v=old;
+		return false;
 	}
 	return true;
 }

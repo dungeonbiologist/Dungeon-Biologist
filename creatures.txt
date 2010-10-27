@@ -4,7 +4,7 @@ everything outside of the brackets is ignored
 	[NAME:gelatinous cube]
 	[TILE:C][COLOR:RED]
 	[SPEED:50]
-	[MOVE:NORMAL]
+	[MOVE:SNAKE]
 	[SOLID]						can't move through walls
 	[STICKS TO WALLS]			can't move away from them
 	[_YUCKY][_ALIVE][_MOVES]	includeing dashes lets them it know that it is an atribute

@@ -45,9 +45,9 @@ void init()
 {
 	WINDOW *window;
 	window = initscr();		// set up the curses window
-	raw();
+	raw();					// I don't think this does anything
 	srand(time(NULL));		// initializes the random number generator
-	keypad(stdscr, TRUE);	// this line allows me to use the enter and arrow keys
+	keypad(stdscr, TRUE);	// this line allows me to use the the arrow keys
 	clear();				// clear the window
 	noecho();				// don't show typed characters on the screen
 	start_color();

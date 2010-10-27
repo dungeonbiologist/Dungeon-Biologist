@@ -42,6 +42,7 @@ struct creature
 		void moveInertial(int prob);	//inertial
 		void moveSnake(int prob);		//slithery
 		void moveManual(int prob);		//manual
+	bool avoidobstacles(int angle);
 	int blockedby;						//bitfield of disallowed moves
 	bool blocked();
 		bool blockedbyWalls();
