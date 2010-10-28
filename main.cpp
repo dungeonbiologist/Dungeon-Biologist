@@ -33,8 +33,15 @@ int main()
 	while(inchar != 'q')
 	{
 		print();
-		for(list<creature*>::const_iterator j=monsterlist.begin();j !=monsterlist.end();j++)
+		for(list<creature*>::iterator j=monsterlist.begin();j !=monsterlist.end();j++)
+		{
 			(*j) ->update();
+			if((*j)->energy<=0)
+			{
+				(*j)=NULL;
+				monsterlist.erase(j);
+			}
+		}
 	}
 	refresh();
 	echo();			// turn echoing back on before exiting
@@ -59,6 +66,8 @@ void init()
 		init_pair(5,	COLOR_CYAN,		COLOR_BLACK);
 		init_pair(6,	COLOR_BLUE,		COLOR_BLACK);
 		init_pair(7,	COLOR_MAGENTA,	COLOR_BLACK);
+		
+		init_pair(8,	COLOR_WHITE,	COLOR_RED);
 	turncount=0;
 	
 	for(int y=0; y<Y; y++)

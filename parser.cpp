@@ -132,6 +132,10 @@ creature* tokenize(string letters,creature* victim)
 		victim->digtype = 2;
 	else if(letters.find("MAZE DIGGER") < letters.length())
 		victim->digtype = 3;
+	else if(letters.find("PHOTOSYNTHESIZES") < letters.length())
+		victim->photosynthesizes=true;
+	else if(letters.find("CALCIFEROUS") < letters.length())
+		victim->response=1;
 	else
 		parseError.log("unknown symbol: "+ letters + " in creature definition: "+ victim->identifier);
 	return victim;

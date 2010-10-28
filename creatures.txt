@@ -9,15 +9,16 @@ everything outside of the brackets is ignored
 	[STICKS TO WALLS]			can't move away from them
 	[_YUCKY][_ALIVE][_MOVES]	includeing dashes lets them it know that it is an atribute
 	[EATS_PLANT][EATS_ALIVE]
+	[CALCIFEROUS]
 
 [CREATURE:MOSS] inside the brackets is whitespace sentive right now, I plan on fixing that
-	[DEFAULT:CUBE]	starts off with all of cube's setting by default
 	[NAME:cave moss]
 	[TILE:;][COLOR:GREEN]
 	[SPEED:100]
 	[MOVE:NONE]
-	[_PLANT][_ALIVE][_EGG][NOT_YUCKY]
-	[CAN'T_EAT_PLANT]
+	[PHOTOSYNTHESIZES] try spelling that reliably
+	[_PLANT][_ALIVE]
+	[CAN'T_EAT_PLANT][CAN'T_EAT_ALIVE]
 	
 [CREATURE:PLAYER]
 	[NAME:you]
@@ -25,7 +26,8 @@ everything outside of the brackets is ignored
 	[SPEED:100]
 	[MOVE:MANUAL]
 	[SOLID]
-	[_ANIMAL][_ALIVE]
+	[PHOTOSYNTHESIZES] so that you can't die of energy loss
+	[_ANIMAL][_PLANT][_ALIVE]
 	[MAZE DIGGER]
 	
 [CREATURE:LARVA]
@@ -44,13 +46,16 @@ everything outside of the brackets is ignored
 	[MOVE:NORMAL]
 	[SOLID]
 	[_ALIVE][_MOVES]
+	[EATS_ALIVE][EATS_MOVES]
 	[EROSIVE]		removes walls exposed on three or more sides
 	
 [CREATURE:MOLE]
+	[DEFAULT:CUBE]	starts off with all of cube's setting by default
 	[NAME:Rock Mole]
 	[TILE:M][COLOR:MAGENTA]
 	[SPEED:100]
 	[MOVE:NORMAL]
 	[SOLID]
-	[_ALIVE][_MOVES]
+	[_ALIVE][_MOVES][NOT_YUCKY]
+	[EATS_YUCKY][EATS_ALIVE][EATS_MOVES]
 	[COOLAID MAN]	bursts through walls OH YEAH!!!

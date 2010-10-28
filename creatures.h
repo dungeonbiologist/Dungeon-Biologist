@@ -30,11 +30,18 @@ struct creature
 	string Cname;
 	char appearance;
 	int hue,speed;
-	int hp,actionpoints,energy;					//energy is used for special abilities and reproduceing
-	int properties;								//bitfield of counterdigestive properties
-	int appetite;								//bitfield of digestive abilities
+	int hp,actionpoints,energy;			//energy is used for special abilities and reproduceing
+	int properties;						//bitfield of counterdigestive properties
+	int appetite;						//bitfield of digestive abilities
+	int bitesize;						//how much energy they consume per eating attempt
+	int waste;							//how much energy gets lost in the transfer from the prey
+	bool photosynthesizes;
 	bool isType(string symbol);
 	void update();
+	bool eat();
+	int response;						//response to attack
+	void attacked(creature* agressor);
+		void calcify(creature* agressor);
 	bool move();
 	int movetype;
 	void choosemove(int b);				//function pointers got too complicated

@@ -33,11 +33,56 @@ void creature::update()
 {
 //	if(!(properties & live))
 //		return;
+	if(!photosynthesizes && energy>0)
+		energy--;
+	else if(rand()%2==0)
+		energy++;
 	actionpoints += speed;
 	if(actionpoints < 100)	return;
+	eat();
 	choosemove(1);
 	dig();
 	avoidobstacles(2);	//find a workable path
+	move();
+}
+bool creature::eat()
+{
+	list<creature*>::iterator i;
+	for(i=monsterlist.begin();i !=monsterlist.end();i++)
+	{
+		int a=y-(*i)->y;
+		int b=x-(*i)->x;
+		if((*i) != this && a*a<=1 && b*b<=1)	//not me but next to me
+			if(appetite ^ ~(*i)->properties == ~0)	//for every 1 they have We must have a 1 in the same spot
+//				if((*i)->energy >= bightsize)
+				{
+					(*i)->attacked(this);
+					(*i)->energy-=5;
+					energy+=1;
+					return true;
+				}
+	}
+	return false;
+}
+void creature::attacked(creature* agressor)
+{
+	switch(response)
+	{
+		case 0 :
+			break;
+		case 1 :
+			calcify(agressor);
+			break;
+		default :
+			break;
+	}
+}
+void creature::calcify(creature* agressor)
+{
+	v.y=agressor->y-y;
+	v.x=agressor->x-x;
+	avoidobstacles(3);
+	wall[y][x] &=1;
 	move();
 }
 bool creature::move()
@@ -184,7 +229,13 @@ void creature::moveManual(int prob)
 			{
 				input.message+=inchar;
 			}
-			if (inchar == 10) //KEY_ENTER
+			if(inchar == KEY_DC || inchar == KEY_BACKSPACE || inchar==127 || inchar==8)
+			{
+				string::iterator i=input.message.end();
+				if(input.message.length()>0)
+					input.message.erase(i-1);
+			}
+			if (inchar == 10 || inchar == '\n') //KEY_ENTER
 			{		//add a creature to the field
 				creature* temp=new creature;		//because if I just declare a creature by value it will go out of scope
 				temp->isType(input.message);
@@ -302,13 +353,20 @@ creature::creature()
 	movetype=0;
 	blockedby=0;
 	digtype=0;
+	bitesize=0;
+	waste=0;
+	photosynthesizes=false;
+	response =0;
 }
 void creature::appear()
 {
 	if(legal(y,x))
 	{
 		view[y][x]=appearance;
-		color[y][x]=hue;
+		if(energy>0)
+			color[y][x]=hue;
+		else
+			color[y][x]=8;
 	}
 	else
 		parseError.log("creature cordinants out of bounds");
