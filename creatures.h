@@ -31,17 +31,27 @@ struct creature
 	char appearance;
 	int hue,speed;
 	int hp,actionpoints,energy;			//energy is used for special abilities and reproduceing
+	
 	int properties;						//bitfield of counterdigestive properties
 	int appetite;						//bitfield of digestive abilities
 	int bitesize;						//how much energy they consume per eating attempt
 	int waste;							//how much energy gets lost in the transfer from the prey
 	bool photosynthesizes;
+	bool player;
+	bool eat();
+	
+	void transformTo(creature* master);
+	int reproductivetrigger;
+	int reproductivewaste;
+	bool reproduce();
+
 	bool isType(string symbol);
 	void update();
-	bool eat();
+	
 	int response;						//response to attack
 	void attacked(creature* agressor);
 		void calcify(creature* agressor);
+		
 	bool move();
 	int movetype;
 	void choosemove(int b);				//function pointers got too complicated
@@ -49,17 +59,24 @@ struct creature
 		void moveInertial(int prob);	//inertial
 		void moveSnake(int prob);		//slithery
 		void moveManual(int prob);		//manual
+		
 	bool avoidobstacles(int angle);
 	int blockedby;						//bitfield of disallowed moves
 	bool blocked();
 		bool blockedbyWalls();
 		bool adjacenttoWalls();
+		bool blockedByCreatures();
+		
 	int digtype;
 	bool dig();
 		bool digmaze();
 		bool digwall();
 		bool digexposed();
-	void transformTo(creature* master);
+		
+	int hatchwhen;
+	bool hatch();
+		bool inToTile();
+		
 	creature();
 	void appear();
 //	int blocked();

@@ -126,6 +126,8 @@ creature* tokenize(string letters,creature* victim)
 		victim->blockedby |= 1;
 	else if(letters.find("STICKS TO WALLS") < letters.length())
 		victim->blockedby |= 2;
+	else if(letters.find("NOT PUSHY") < letters.length())
+		victim->blockedby |= 4;
 	else if(letters.find("EROSIVE") < letters.length())
 		victim->digtype = 1;
 	else if(letters.find("COOLAID MAN") < letters.length())
@@ -134,8 +136,12 @@ creature* tokenize(string letters,creature* victim)
 		victim->digtype = 3;
 	else if(letters.find("PHOTOSYNTHESIZES") < letters.length())
 		victim->photosynthesizes=true;
+	else if(letters.find("PLAYER") < letters.length())
+		victim->player=true;
 	else if(letters.find("CALCIFEROUS") < letters.length())
 		victim->response=1;
+	else if(letters.find("EGG SCATTER") < letters.length())
+		victim->hatchwhen=1;
 	else
 		parseError.log("unknown symbol: "+ letters + " in creature definition: "+ victim->identifier);
 	return victim;

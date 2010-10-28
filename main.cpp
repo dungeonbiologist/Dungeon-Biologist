@@ -30,7 +30,7 @@ int main()
 	player.y=Y/2;
 	player.x=X/2;
 	player.isType("PLAYER");
-	while(inchar != 'q')
+	while(inchar != 'q' && inchar != 'Q')
 	{
 		print();
 		for(list<creature*>::iterator j=monsterlist.begin();j !=monsterlist.end();j++)

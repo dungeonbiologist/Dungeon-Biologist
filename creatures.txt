@@ -15,9 +15,10 @@ everything outside of the brackets is ignored
 	[NAME:cave moss]
 	[TILE:;][COLOR:GREEN]
 	[SPEED:100]
-	[MOVE:NONE]
+	[MOVE:NONE][SOLID][NOT PUSHY]		can't move through other creatures
+	[EGG SCATTER]
 	[PHOTOSYNTHESIZES] try spelling that reliably
-	[_PLANT][_ALIVE]
+	[_PLANT][_ALIVE][_EGG]
 	[CAN'T_EAT_PLANT][CAN'T_EAT_ALIVE]
 	
 [CREATURE:PLAYER]
@@ -25,10 +26,8 @@ everything outside of the brackets is ignored
 	[TILE:@][COLOR:RED]
 	[SPEED:100]
 	[MOVE:MANUAL]
-	[SOLID]
-	[PHOTOSYNTHESIZES] so that you can't die of energy loss
-	[_ANIMAL][_PLANT][_ALIVE]
-	[MAZE DIGGER]
+	[PLAYER] so that you can't die of energy loss
+	[_ALIVE]
 	
 [CREATURE:LARVA]
 	[NAME:larva]

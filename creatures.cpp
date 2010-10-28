@@ -33,27 +33,31 @@ void creature::update()
 {
 //	if(!(properties & live))
 //		return;
-	if(!photosynthesizes && energy>0)
+	if(!player && !photosynthesizes && energy>0)
 		energy--;
-	else if(rand()%2==0)
+	if(photosynthesizes)
 		energy++;
 	actionpoints += speed;
 	if(actionpoints < 100)	return;
+	actionpoints-=100;
+	reproduce();
 	eat();
 	choosemove(1);
 	dig();
 	avoidobstacles(2);	//find a workable path
 	move();
+	if(properties & isegg)
+		hatch();
 }
 bool creature::eat()
 {
 	list<creature*>::iterator i;
 	for(i=monsterlist.begin();i !=monsterlist.end();i++)
 	{
-		int a=y-(*i)->y;
-		int b=x-(*i)->x;
+		int a=(*i)->y - y;
+		int b=(*i)->x - x;
 		if((*i) != this && a*a<=1 && b*b<=1)	//not me but next to me
-			if(appetite ^ ~(*i)->properties == ~0)	//for every 1 they have We must have a 1 in the same spot
+			if((appetite | ~(*i)->properties) == ~0)	//for every 1 they have We must have a 1 in the same spot
 //				if((*i)->energy >= bightsize)
 				{
 					(*i)->attacked(this);
@@ -79,10 +83,10 @@ void creature::attacked(creature* agressor)
 }
 void creature::calcify(creature* agressor)
 {
-	v.y=agressor->y-y;
-	v.x=agressor->x-x;
+	v.y=y-agressor->y;	//face away
+	v.x=x-agressor->x;
 	avoidobstacles(3);
-	wall[y][x] &=1;
+	wall[y][x] |= 1;	//stick wall here
 	move();
 }
 bool creature::move()
@@ -104,6 +108,8 @@ bool creature::blocked()	 //check wether all of it's contrains allow it to move 
 		b= b || blockedbyWalls();
 	if(blockedby & 2)
 		b= b || adjacenttoWalls();
+	if(blockedby & 4)
+		b= b || blockedByCreatures();
 	return b;
 }
 bool creature::blockedbyWalls()
@@ -127,6 +133,19 @@ bool creature::adjacenttoWalls()
 	}
 	return true;
 }
+bool creature::blockedByCreatures()
+{
+	list<creature*>::iterator i;
+	for(i=monsterlist.begin();i !=monsterlist.end();i++)
+	{
+		int a=(*i)->y - y;
+		int b=(*i)->x - x;
+		if((*i) != this && a==v.y && b==v.x)	//not me but next to me
+			return true;
+	}
+	return false;
+}
+
 bool creature::avoidobstacles(int angle) //angel = how far they can turn
 {
 	if(angle>4)angle=4;
@@ -194,7 +213,6 @@ void creature::moveSnake(int prob)
 }
 void creature::moveManual(int prob)
 {
-	energy++;
 	inchar = getch();
 //	if(inchar != ERR)
 	{
@@ -321,6 +339,32 @@ bool creature::digexposed()
 	}
 	return false;
 }
+bool creature::hatch()
+{
+	bool b=true;
+	switch(hatchwhen)
+	{
+		case 1 :
+			b &= inToTile();
+			break;
+	}
+	if(b)
+		properties &= ~isegg;
+	return b;
+}
+bool creature::inToTile()
+{
+	v.setTo(0);
+	if(blocked())
+	{
+		v.polarize();
+		for(int i=0;i<9 && blocked();++i)
+		if(i==9)
+			return false;
+	}
+	move();
+	return true;
+}
 void creature::transformTo(creature* master)
 {
 	int tempy=y;
@@ -335,6 +379,25 @@ void creature::transformTo(creature* master)
 	energy=tempenergy;
 	actionpoints=tempactionpoints;
 }
+bool creature::reproduce()
+{
+	if(energy >= reproductivetrigger)
+	{
+		creature* temp=new creature;		//because if I just declare a creature by value it will go out of scope
+		if(temp->isType(identifier))		//just in case somthing goes horribly wrong
+		{
+			energy-=reproductivewaste;
+			energy/=2;
+			temp->y=y;
+			temp->x=x;
+			temp->energy=energy;
+			return true;
+		}
+		else
+			parseError.log("When reproduceing, " +identifier+" was unable to find prototype");
+	}
+	return false;
+}
 creature::creature()
 {
 	identifier="???";
@@ -347,8 +410,8 @@ creature::creature()
 	speed=100;
 	hp=5;
 	actionpoints=0;
-	energy=100;					//energy is used for special abilities and reproduceing
-	properties=0;								//bitfield of counterdigestive properties
+	energy=100;								//energy is used for special abilities and reproduceing
+	properties=0;							//bitfield of counterdigestive properties
 	appetite=0;								//bitfield of digestive abilities
 	movetype=0;
 	blockedby=0;
@@ -356,7 +419,11 @@ creature::creature()
 	bitesize=0;
 	waste=0;
 	photosynthesizes=false;
+	player=false;
 	response =0;
+	hatchwhen=0;
+	reproductivetrigger=200;
+	reproductivewaste=0;
 }
 void creature::appear()
 {
