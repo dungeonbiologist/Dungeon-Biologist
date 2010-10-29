@@ -1,9 +1,8 @@
 Dungeon biologist is a work in progress which intends to become a dungeon ecology simulation
 
-type "MOLE" to add a mole
-"LARVA" to add a larva and so on
+type "LARVA" in game to add a larva
+any creature you add to creatures.txt you can add in the same manner 
 
-edit creatures.txt to create new creatures
 
 Larva: eats walls that have only one side exposed can only move orthogonally
 gelatinous cubes: must stay in contact with a wall at all times. if attacked they excrete a wall, they eat wall slime

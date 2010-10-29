@@ -232,26 +232,10 @@ void creature::moveManual(int prob)
 				v.x=1;
 			else if(inchar==' ')
 				wall[y][x]^=1;
-			else if(inchar=='x')
-			{
-				list<creature*>::iterator i=map[y][x].begin();
-				if(wall[y][x])
-					printtext(0,1,"wall");
-				else
-					printtext(0,1,"floor");
-				for(int j=1;i !=map[y][x].end();i++)
-				{
-					printtext(j,1,(*i)->Cname);
-					if(!((*i)->properties & live))
-						printtext(j,(*i)->Cname.size(),"dead");
-					++j;
-				}
-				getch();
-			}
 			else if(inchar >= 'A' && inchar <= 'Z')
-			{
 				input.message+=inchar;
-			}
+			else if(inchar == '?')
+				input.displayhelp=true;
 			if(inchar == KEY_DC || inchar == KEY_BACKSPACE || inchar==127 || inchar==8)
 			{
 				string::iterator i=input.message.end();

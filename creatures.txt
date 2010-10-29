@@ -1,33 +1,49 @@
 everything outside of the brackets is ignored
+colors are BLACK WHITE RED YELLOW GREEN CYAN BLUE and MAGENTA
 
-[CREATURE:CUBE]   type "CUBE" in the game to spawn one
-	[NAME:gelatinous cube]
+[CREATURE:CUBE]					type "CUBE" in the game to spawn one of these
+	[NAME:gelatinous cube]		inside the brackets is whitespace sensitive right now, I plan on fixing that
 	[TILE:C][COLOR:RED]
 	[SPEED:50]
 	[MOVE:SNAKE]
 	[SOLID]						can't move through walls
 	[STICKS TO WALLS]			can't move away from them
 	[_YUCKY][_ALIVE][_MOVES]	includeing dashes lets them it know that it is an atribute
+								atributes of the prey are compared to the digestive atributes of the preditor to see if it can be digested 
 	[EATS_PLANT][EATS_ALIVE][EATS_EGG]
 	[CALCIFEROUS]
 
-[CREATURE:MOSS] inside the brackets is whitespace sentive right now, I plan on fixing that
+[CREATURE:MOLE]					This is it's unique identifier, duplicates would cause funny things
+	[DEFAULT:CUBE]				starts off with all of cube's setting by default
+	[NAME:Rock Mole]
+	[TILE:M][COLOR:MAGENTA]
+	[SPEED:100]
+	[MOVE:NORMAL]				just kinda wiggles around
+	[NOT_YUCKY]
+	[EATS_YUCKY][EATS_MOVES]
+	[CAN'T_EAT_PLANT]
+	[KOOLAID MAN]				bursts through walls OH YEAH!!!
+
+[CREATURE:MOSS]
 	[NAME:cave moss]
 	[TILE:;][COLOR:GREEN]
 	[SPEED:100]
-	[MOVE:NONE][SOLID][NOT PUSHY]		can't move through other creatures
+	[MOVE:NONE]
+	[SOLID]						can't move through walls
+	[NOT PUSHY]					can't move through other creatures
 	[EGG SCATTER]
-	[PHOTOSYNTHESIZES] try spelling that reliably
+	[PHOTOSYNTHESIZES]
 	[_PLANT][_ALIVE][_EGG]
 	[CAN'T_EAT_PLANT][CAN'T_EAT_ALIVE]
 	
-[CREATURE:SLIME] inside the brackets is whitespace sentive right now, I plan on fixing that
+[CREATURE:SLIME]
 	[NAME:wall slime]
 	[TILE:#][COLOR:GREEN]
 	[SPEED:100]
-	[MOVE:NONE][NOT PUSHY][ANTISOLID]		can't move through other creatures
+	[MOVE:NONE][NOT PUSHY]
+	[ANTISOLID]					can't move through spaces
 	[EGG SCATTER]
-	[PHOTOSYNTHESIZES] try spelling that reliably
+	[PHOTOSYNTHESIZES]			try spelling that reliably
 	[_PLANT][_ALIVE][_EGG]
 	
 [CREATURE:PLAYER]
@@ -35,17 +51,17 @@ everything outside of the brackets is ignored
 	[TILE:@][COLOR:RED]
 	[SPEED:100]
 	[MOVE:MANUAL]
-	[PLAYER] so that you can't die of energy loss
+	[PLAYER]					so that you can't die of energy loss
 	[_ALIVE]
 	
 [CREATURE:LARVA]
 	[NAME:larva]
-	[TILE:~][COLOR:CYAN]
+	[TILE:L][COLOR:CYAN]
 	[SPEED:100]
-	[MOVE:SNAKE]
+	[MOVE:SNAKE]				can turn slowly
 	[SOLID]
 	[_ALIVE][_MOVES]
-	[MAZE DIGGER]
+	[MAZE DIGGER]				can never dig a loop
 	
 [CREATURE:CRAB]
 	[NAME:Hammer Crab]
@@ -55,15 +71,4 @@ everything outside of the brackets is ignored
 	[SOLID]
 	[_ALIVE][_MOVES]
 	[EATS_ALIVE][EATS_MOVES]
-	[EROSIVE]		removes walls exposed on three or more sides
-	
-[CREATURE:MOLE]
-	[DEFAULT:CUBE]	starts off with all of cube's setting by default
-	[NAME:Rock Mole]
-	[TILE:M][COLOR:MAGENTA]
-	[SPEED:100]
-	[MOVE:NORMAL]
-	[SOLID]
-	[_ALIVE][_MOVES][NOT_YUCKY]
-	[EATS_YUCKY][EATS_ALIVE][EATS_MOVES][CAN'T_EAT_PLANT]
-	[KOOLAID MAN]	bursts through walls OH YEAH!!!
+	[EROSIVE]					removes walls exposed on three or more sides

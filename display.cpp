@@ -17,16 +17,11 @@ void print()
 				view[y][x]='#';
 			else
 				view[y][x]='.';
-//			for(i=map[y][x].begin();i != map[y][x].end();i++)
-//			{
-//				(*i)->appear();
-//				if((*i)->x !=x ||(*i)->y !=y)		//DANGER! this could conceal a bug, fix what causes the disreprency first
-//					map[y][x].erase(i);
-//			}
 		}
 	for(list<creature*>::const_iterator j=monsterlist.begin();j !=monsterlist.end();j++)
 		(*j)->appear();
 	input.print();
+	input.help();	//display the help if needed
 /*
 	for(int y=-1; y<=Y; y++)//it stops just before the the line reaches the goal, I have to do this to include the corners
 	{
@@ -46,7 +41,7 @@ void print()
 //			if(visible[y][x])
 			{
 				attrset(COLOR_PAIR(color[y][x]));
-				mvaddch(y, x*2, view[y][x]);
+				mvaddch(y, x*aspect, view[y][x]);
 			}
 			color[y][x]=0;
 			view[y][x]=' ';
@@ -178,3 +173,23 @@ void bresenham(int y0,int y1,int x0,int x1)
 	}
 }
 /***************************/
+void Messages::help()
+{
+	if(displayhelp)
+	{
+		for(int y=0; y<Y; y++)
+			for(int x=0; x<X; x++)
+				view[y][x]=' ';
+		printcentered(5,"This is a work in progress,");
+		printcentered(6,"it is intended to become a");
+		printcentered(7,"dungeon ecology simulation");
+		printcentered(10,"To add a larva, type in \"LARVA\"");
+		printcentered(11,"only capital letters are accepted");
+		printcentered(12,"any creature from creatures.txt");
+		printcentered(13,"may be added in this manner");
+		printcentered(17,"for up to date source go to");
+		printcentered(18,"http://github.com/dungeonbiologist");
+		printcentered(19,"/Dungeon-Biologist");
+		displayhelp=false;
+	}
+}

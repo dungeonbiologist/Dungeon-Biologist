@@ -11,7 +11,14 @@
 	void bresenham(int y0,int y1,int x0,int x1);
 	struct Messages
 	{
+		bool displayhelp;
 		string message;
 		void print(){ printcentered(0,message);}
+		void help();
 	};
+	#ifdef WIN32				//on windows the tiles are square,
+		const int aspect=1;		//if the tile height matches width
+	#else
+		const int aspect=2;		//if the tiles are twice as tall as they are wide
+#endif
 #endif
