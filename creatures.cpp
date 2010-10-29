@@ -29,14 +29,17 @@ bool creature::isType(string symbol)
 		return true;
 	}
 }
-void creature::update()
+void creature::update()	//THIS IS THE MAIN FUNCTION
 {
-//	if(!(properties & live))
-//		return;
 	if(!player && !photosynthesizes && energy>0)
 		energy--;
-	if(photosynthesizes)
+	if(photosynthesizes && !(properties & isegg))
 		energy++;
+	if(energy<=0 || hp<=0)
+	{
+		properties &= ~live;
+		return;
+	}
 	actionpoints += speed;
 	if(actionpoints < 100)	return;
 	actionpoints-=100;
@@ -61,8 +64,8 @@ bool creature::eat()
 //				if((*i)->energy >= bightsize)
 				{
 					(*i)->attacked(this);
-					(*i)->energy-=5;
-					energy+=1;
+					(*i)->energy-=bitesize;
+					energy+=(bitesize-waste);
 					return true;
 				}
 	}
@@ -110,6 +113,8 @@ bool creature::blocked()	 //check wether all of it's contrains allow it to move 
 		b= b || adjacenttoWalls();
 	if(blockedby & 4)
 		b= b || blockedByCreatures();
+	if(blockedby & 8)
+		b= b || !blockedbyWalls();	//it can only move inside walls
 	return b;
 }
 bool creature::blockedbyWalls()
@@ -358,7 +363,9 @@ bool creature::inToTile()
 	if(blocked())
 	{
 		v.polarize();
-		for(int i=0;i<9 && blocked();++i)
+		int i;
+		for(i=0;i<9 && blocked();++i)
+			v.turn(1);
 		if(i==9)
 			return false;
 	}
@@ -416,7 +423,7 @@ creature::creature()
 	movetype=0;
 	blockedby=0;
 	digtype=0;
-	bitesize=0;
+	bitesize=5;
 	waste=0;
 	photosynthesizes=false;
 	player=false;
@@ -429,8 +436,11 @@ void creature::appear()
 {
 	if(legal(y,x))
 	{
-		view[y][x]=appearance;
-		if(energy>0)
+		if(!(properties & isegg))
+			view[y][x]=appearance;
+		else
+			view[y][x]=',';
+		if(properties & live)
 			color[y][x]=hue;
 		else
 			color[y][x]=8;

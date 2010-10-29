@@ -8,7 +8,7 @@ everything outside of the brackets is ignored
 	[SOLID]						can't move through walls
 	[STICKS TO WALLS]			can't move away from them
 	[_YUCKY][_ALIVE][_MOVES]	includeing dashes lets them it know that it is an atribute
-	[EATS_PLANT][EATS_ALIVE]
+	[EATS_PLANT][EATS_ALIVE][EATS_EGG]
 	[CALCIFEROUS]
 
 [CREATURE:MOSS] inside the brackets is whitespace sentive right now, I plan on fixing that
@@ -20,6 +20,15 @@ everything outside of the brackets is ignored
 	[PHOTOSYNTHESIZES] try spelling that reliably
 	[_PLANT][_ALIVE][_EGG]
 	[CAN'T_EAT_PLANT][CAN'T_EAT_ALIVE]
+	
+[CREATURE:SLIME] inside the brackets is whitespace sentive right now, I plan on fixing that
+	[NAME:wall slime]
+	[TILE:#][COLOR:GREEN]
+	[SPEED:100]
+	[MOVE:NONE][NOT PUSHY][ANTISOLID]		can't move through other creatures
+	[EGG SCATTER]
+	[PHOTOSYNTHESIZES] try spelling that reliably
+	[_PLANT][_ALIVE][_EGG]
 	
 [CREATURE:PLAYER]
 	[NAME:you]
@@ -56,5 +65,5 @@ everything outside of the brackets is ignored
 	[MOVE:NORMAL]
 	[SOLID]
 	[_ALIVE][_MOVES][NOT_YUCKY]
-	[EATS_YUCKY][EATS_ALIVE][EATS_MOVES]
-	[COOLAID MAN]	bursts through walls OH YEAH!!!
+	[EATS_YUCKY][EATS_ALIVE][EATS_MOVES][CAN'T_EAT_PLANT]
+	[KOOLAID MAN]	bursts through walls OH YEAH!!!

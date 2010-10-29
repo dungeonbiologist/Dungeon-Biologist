@@ -105,42 +105,44 @@ creature* tokenize(string letters,creature* victim)
 			victim->movetype = i;	//assign a function to the function pointer
 		}
 	}
-	else if(letters.find("EATS_") < letters.length())			//parse the properties of this creature , is it a plant? an animal?
+	else if(letters.find("EATS_") ==0)			//parse the properties of this creature , is it a plant? an animal?
 	{
 		string property =letters.substr(underscore+1,letters.npos);					//find rest of symbol
 		victim->appetite = changeProp(victim->appetite,false,property);	//update properties accordingly
 	}
-	else if(letters.find("CAN'T_EAT_") < letters.length())			//parse the properties of this creature , is it a plant? an animal?
+	else if(letters.find("CAN'T_EAT_") ==0)			//parse the properties of this creature , is it a plant? an animal?
 	{
-		int canteat=letters.find("CAN'T_EAT_") < letters.length();
+		int canteat=letters.find("CAN'T_EAT_") ==0;
 		string property =letters.substr(canteat+9,letters.npos);		//find rest of symbol, removeing the first 9 since they = "can't"
 		victim->appetite = changeProp(victim->appetite,true,property);	//update properties accordingly
 	}
 	else if(underscore < letters.length())			//parse the properties of this creature , is it a plant? an animal?
 	{
-		bool NOT=letters.find("NOT_") < letters.length();						//is there a NOT- ?
+		bool NOT=letters.find("NOT_") ==0;						//is there a NOT- ?
 		string property =letters.substr(underscore+1,letters.npos);					//find rest of symbol
 		victim->properties = changeProp(victim->properties,NOT,property);	//update properties accordingly
 	}
-	else if(letters.find("SOLID") < letters.length())
+	else if(letters.find("SOLID") ==0)
 		victim->blockedby |= 1;
-	else if(letters.find("STICKS TO WALLS") < letters.length())
+	else if(letters.find("STICKS TO WALLS") ==0)
 		victim->blockedby |= 2;
-	else if(letters.find("NOT PUSHY") < letters.length())
+	else if(letters.find("NOT PUSHY") ==0)
 		victim->blockedby |= 4;
-	else if(letters.find("EROSIVE") < letters.length())
+	else if(letters.find("ANTISOLID") ==0)
+		victim->blockedby |= 8;
+	else if(letters.find("EROSIVE") ==0)
 		victim->digtype = 1;
-	else if(letters.find("COOLAID MAN") < letters.length())
+	else if(letters.find("KOOLAID MAN") ==0)
 		victim->digtype = 2;
-	else if(letters.find("MAZE DIGGER") < letters.length())
+	else if(letters.find("MAZE DIGGER") ==0)
 		victim->digtype = 3;
-	else if(letters.find("PHOTOSYNTHESIZES") < letters.length())
+	else if(letters.find("PHOTOSYNTHESIZES") ==0)
 		victim->photosynthesizes=true;
-	else if(letters.find("PLAYER") < letters.length())
+	else if(letters.find("PLAYER") ==0)
 		victim->player=true;
-	else if(letters.find("CALCIFEROUS") < letters.length())
+	else if(letters.find("CALCIFEROUS") ==0)
 		victim->response=1;
-	else if(letters.find("EGG SCATTER") < letters.length())
+	else if(letters.find("EGG SCATTER") ==0)
 		victim->hatchwhen=1;
 	else
 		parseError.log("unknown symbol: "+ letters + " in creature definition: "+ victim->identifier);
