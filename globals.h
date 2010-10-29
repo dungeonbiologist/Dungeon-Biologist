@@ -32,7 +32,7 @@ struct errorfile
 		if (!myfile.is_open())
 			myfile.open("error.txt");
   		if (myfile.is_open())
-			myfile << error << "\n";
+			myfile << error.c_str() << "\n";
 	}
 };
 extern errorfile parseError;

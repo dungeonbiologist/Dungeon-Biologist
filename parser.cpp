@@ -4,6 +4,7 @@
 #include <list>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include "globals.h"
 #include "creatures.h"
 #include "parser.h"
@@ -27,7 +28,7 @@ void parse(string file)						//this may not be the best parser but it's the firs
 		}
 	}
 	else
-		parseError.log("Unable to find file: "+ file);
+		parseError.log(("Unable to find file: " + file));
 	fseed.close();
 }
 creature* tokenize(string letters,creature* victim)

@@ -88,16 +88,18 @@ void printNumber(int a, int b, int number)
 		count++;
 	if(number < 0)
 	{
-		char pstring[count+2];
+		char* pstring = new char[count+2];
 		*convert(number, &pstring[1])='\0';	//we add a terminateing character to the end of the string
 		pstring[0]='-';
 		printtext(a,b,pstring);
+		delete [] pstring;
 	}
 	else
 	{
-		char pstring[count+1];
+		char* pstring = new char[count+1];
 		*convert(number, pstring)='\0';	//we add a terminateing character to the end of the string
 		printtext(a,b,pstring);
+		delete [] pstring;
 	}
 }
 /***************************/

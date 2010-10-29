@@ -4,6 +4,7 @@
 #include <list>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "globals.h"
 #include "creatures.h"
 #include "parser.h"
