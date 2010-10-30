@@ -243,7 +243,7 @@ void creature::moveManual(int prob)
 				if(input.message.length()>0)
 					input.message.erase(i-1);
 			}
-			if (inchar == 10 || inchar == '\n') //KEY_ENTER
+			if (inchar == 10 || inchar == '\n' || inchar == '\r') //KEY_ENTER
 			{		//add a creature to the field
 				creature* temp=new creature;		//because if I just declare a creature by value it will go out of scope
 				temp->isType(input.message);

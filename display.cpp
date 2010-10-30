@@ -103,7 +103,7 @@ void printNumber(int a, int b, int number)
 	}
 }
 /***************************/
-int abs(int a)
+int iabs(int a)
 {
 	if(a<0)	return a*-1;
 	else	return a;
@@ -116,7 +116,7 @@ void swap(int &a,int &b)
 }
 void bresenham(int y0,int y1,int x0,int x1)
 {
-	bool steep = abs(y1 - y0) > abs(x1 - x0);
+	bool steep = iabs(y1 - y0) > iabs(x1 - x0);
 	if(steep)
 	{
 		swap(x0, y0);
